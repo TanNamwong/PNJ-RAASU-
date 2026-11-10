@@ -3,28 +3,18 @@
   "name": "PNJ-RAASU",
   "short_name": "PNJ-RAASU",
   "description": "PNJ-RAASU Progressive Web App",
+  "lang": "th",
+  "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f2f7fa",
   "theme_color": "#102a43",
-  "categories": [
-    "utilities",
-    "productivity"
-  ],
+  "categories": ["utilities", "productivity"],
   "icons": [
-    {
-      "src": "./assets/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./assets/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
+    {"src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "./icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
   ]
 }

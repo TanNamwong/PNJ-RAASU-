@@ -6,8 +6,12 @@
 <meta name="theme-color" content="#102a43">
 <meta name="description" content="PNJ-RAASU แอปพลิเคชันใช้งานบน iOS และ Android">
 <link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./assets/icon-192.png">
-<link rel="icon" href="./assets/logo.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PNJ-RAASU">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" href="./logo.png">
 <title>PNJ-RAASU</title>
 <style>
 :root{--navy:#102a43;--blue:#176b87;--cyan:#dff5f3;--ink:#183247;--muted:#63798a;--bg:#f2f7fa;--line:#e4edf2}
@@ -35,7 +39,7 @@ dialog{border:0;border-radius:20px;max-width:440px;width:calc(100% - 30px);paddi
 </head>
 <body>
 <header><div class="head">
- <div class="brand"><img src="./assets/logo.png" alt="โลโก้ PNJ-RAASU"><div><h1>PNJ-RAASU</h1><p>แอปพลิเคชันสำหรับใช้งานบนมือถือ</p></div></div>
+ <div class="brand"><img src="./logo.png" alt="โลโก้ PNJ-RAASU"><div><h1>PNJ-RAASU</h1><p>แอปพลิเคชันสำหรับใช้งานบนมือถือ</p></div></div>
  <nav aria-label="เมนูหลัก">
   <button class="active" data-page="home">หน้าหลัก</button>
   <button data-page="install">ติดตั้งแอป</button>
@@ -84,16 +88,16 @@ dialog{border:0;border-radius:20px;max-width:440px;width:calc(100% - 30px);paddi
 <section id="developer" class="page hidden">
  <article class="panel"><h2>ผู้พัฒนาแอปพลิเคชัน</h2>
   <div class="developer">
-   <img src="./assets/developer.png" alt="ภาพประกอบผู้พัฒนาแอป">
+   <img src="./developer.png" alt="ภาพประกอบผู้พัฒนาแอป">
    <div><h3>นายแทน นามวงค์</h3><p>ผู้พัฒนาแอปพลิเคชัน PNJ-RAASU</p><p class="muted">ขอบคุณที่ใช้งาน PNJ-RAASU</p></div>
   </div>
  </article>
 </section>
-<footer>PNJ-RAASU · Version <span id="footerVersion">1.0.1</span></footer>
+<footer>PNJ-RAASU · Version <span id="footerVersion">1.0.2</span></footer>
 </main>
 <dialog id="updateDialog"><h2>มีเวอร์ชันใหม่</h2><p id="dialogText">พบอัปเดตใหม่ของ PNJ-RAASU</p><div class="actions"><button class="primary" id="dialogApply">อัปเดตตอนนี้</button><button class="soft" id="dialogLater">ภายหลัง</button></div></dialog>
 <script>
-const APP_VERSION='1.0.1';
+const APP_VERSION='1.0.2';
 let deferredInstall=null, waitingWorker=null;
 const $=id=>document.getElementById(id);
 $('versionLabel').textContent=$('currentVersion').textContent=$('footerVersion').textContent=APP_VERSION;
@@ -110,37 +114,50 @@ addEventListener('appinstalled',()=>{$('installLabel').textContent='ติดต
 function isStandalone(){return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}
 if(isStandalone())$('installLabel').textContent='ติดตั้งแล้ว';
 
+function cmpVer(a,b){const x=String(a).split('.').map(n=>parseInt(n,10)||0),y=String(b).split('.').map(n=>parseInt(n,10)||0);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1;}return 0;}
+let checking=false;
 async function checkForUpdate(){
+ if(checking)return; checking=true;
  $('updateStatus').textContent='กำลังตรวจสอบ…'; $('checkUpdate').disabled=true;
  try{
   const r=await fetch('./version.json?check='+Date.now(),{cache:'no-store'});
   if(!r.ok)throw new Error('ไม่พบไฟล์ version.json');
   const data=await r.json(), latest=String(data.version||'');
   if(!latest)throw new Error('ข้อมูลเวอร์ชันไม่ถูกต้อง');
-  if(latest!==APP_VERSION){
+  if(cmpVer(latest,APP_VERSION)>0){
    $('updateStatus').textContent='พบเวอร์ชันใหม่: '+latest;
    $('updateDetail').textContent=data.notes||'มีอัปเดตใหม่พร้อมใช้งาน';
    $('applyUpdate').classList.remove('hidden');
    $('dialogText').textContent='เวอร์ชัน '+latest+' พร้อมใช้งาน กรุณาอัปเดตเพื่อรับการปรับปรุงล่าสุด';
-   if($('updateDialog').showModal && !sessionStorage.getItem('updateDismissed'))$('updateDialog').showModal();
+   const dlg=$('updateDialog');
+   if(dlg.showModal && !dlg.open && !sessionStorage.getItem('updateDismissed'))dlg.showModal();
   }else{
    $('updateStatus').textContent='แอปเป็นเวอร์ชันล่าสุด';
    $('updateDetail').textContent='ตรวจสอบล่าสุด: '+new Date().toLocaleString('th-TH');
-   $('applyUpdate').classList.add('hidden');
+   if(!waitingWorker)$('applyUpdate').classList.add('hidden');
   }
  }catch(e){$('updateStatus').textContent='ตรวจสอบไม่ได้';$('updateDetail').textContent=e.message+' · โปรดลองใหม่เมื่อเชื่อมต่ออินเทอร์เน็ต';}
- finally{$('checkUpdate').disabled=false;}
+ finally{$('checkUpdate').disabled=false;checking=false;}
 }
 $('checkUpdate').onclick=checkForUpdate;
-function applyUpdate(){if(waitingWorker){waitingWorker.postMessage({type:'SKIP_WAITING'});}else location.reload();}
+let updating=false;
+async function applyUpdate(){
+ updating=true;
+ try{
+  const reg=await navigator.serviceWorker?.getRegistration();
+  if(reg){await reg.update().catch(()=>{});const w=reg.waiting||waitingWorker;if(w){w.postMessage({type:'SKIP_WAITING'});setTimeout(()=>location.reload(),2500);return;}}
+ }catch(e){}
+ location.reload();
+}
 $('applyUpdate').onclick=applyUpdate;$('dialogApply').onclick=()=>{ $('updateDialog').close();applyUpdate();};
 $('dialogLater').onclick=()=>{$('updateDialog').close();sessionStorage.setItem('updateDismissed','1');};
 
 if('serviceWorker'in navigator){
- navigator.serviceWorker.register('./sw.js').then(reg=>{
-  if(reg.waiting){waitingWorker=reg.waiting;$('applyUpdate').classList.remove('hidden');}
+ const hadController=!!navigator.serviceWorker.controller;
+ navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>{
+  if(reg.waiting&&navigator.serviceWorker.controller){waitingWorker=reg.waiting;$('applyUpdate').classList.remove('hidden');}
   reg.addEventListener('updatefound',()=>{
-   const worker=reg.installing;
+   const worker=reg.installing; if(!worker)return;
    worker.addEventListener('statechange',()=>{
     if(worker.state==='installed'&&navigator.serviceWorker.controller){
      waitingWorker=worker;$('updateStatus').textContent='มีไฟล์แอปเวอร์ชันใหม่พร้อมติดตั้ง';$('applyUpdate').classList.remove('hidden');
@@ -149,10 +166,11 @@ if('serviceWorker'in navigator){
   });
   setInterval(()=>reg.update().catch(()=>{}),60*60*1000);
  }).catch(err=>console.warn('Service worker:',err));
- navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());
+ // รีโหลดเฉพาะเมื่อผู้ใช้กดอัปเดต (ไม่รีโหลดตอนติดตั้งครั้งแรก)
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadController&&updating)location.reload();});
 }
 checkForUpdate();
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&navigator.onLine){checkForUpdate();if(navigator.serviceWorker)navigator.serviceWorker.getRegistration().then(r=>r&&r.update());}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&navigator.onLine){checkForUpdate();if(navigator.serviceWorker)navigator.serviceWorker.getRegistration().then(r=>r&&r.update().catch(()=>{}));}});
 setInterval(()=>{if(navigator.onLine)checkForUpdate();},6*60*60*1000);
 </script>
 </body></html>
