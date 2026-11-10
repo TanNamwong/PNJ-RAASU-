@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102a43">
+<meta name="description" content="PNJ-RAASU แอปพลิเคชันใช้งานบน iOS และ Android">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./assets/icon-192.png">
+<link rel="icon" href="./assets/logo.png">
+<title>PNJ-RAASU</title>
+<style>
+:root{--navy:#102a43;--blue:#176b87;--cyan:#dff5f3;--ink:#183247;--muted:#63798a;--bg:#f2f7fa;--line:#e4edf2}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(135deg,#102a43,#176b87);color:#fff;padding:22px 18px 28px;border-radius:0 0 26px 26px}
+.head,.wrap{max-width:920px;margin:auto}.brand{display:flex;align-items:center;gap:13px}.brand img{width:54px;height:54px;border-radius:15px}.brand h1{font-size:25px;margin:0}.brand p{margin:3px 0 0;font-size:13px;opacity:.82}
+nav{max-width:920px;margin:16px auto 0;display:flex;gap:8px;overflow:auto;padding-bottom:2px}
+nav button{white-space:nowrap;background:#ffffff20;color:white;border:1px solid #ffffff35;border-radius:12px;padding:10px 14px;font-weight:650}
+nav button.active{background:#fff;color:var(--navy)}
+.wrap{padding:18px 15px 40px}.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:21px;margin-bottom:15px;box-shadow:0 8px 26px #15344a0b}
+h2{font-size:21px;margin:0 0 10px}h3{margin:0 0 8px;font-size:17px}p{line-height:1.65;margin:7px 0}.muted{color:var(--muted);font-size:13px}
+.status{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:8px 12px;background:var(--cyan);color:#126354;font-size:13px;font-weight:700}
+.dot{width:8px;height:8px;border-radius:50%;background:#20a477}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+button,.button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:12px 16px;font-weight:700}
+.primary{background:var(--blue);color:white}.soft{background:#eaf1f5;color:var(--navy)}.warn{background:#fff2d8;color:#805500}
+.hidden{display:none!important}.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:15px;padding:16px;background:#fbfdfe}
+.developer{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}.developer img{width:min(240px,100%);height:auto;max-height:390px;object-fit:contain;object-position:top;background:#050505;border-radius:18px}
+ul{padding-left:22px;line-height:1.8}.notice{background:#fff8e8;border-left:4px solid #e6ae39;padding:12px 14px;border-radius:10px;font-size:13px}
+footer{text-align:center;color:#8093a1;font-size:12px;padding:10px}
+dialog{border:0;border-radius:20px;max-width:440px;width:calc(100% - 30px);padding:24px;box-shadow:0 20px 70px #0004}dialog::backdrop{background:#071b2a99}
+@media(min-width:650px){.two{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}.two .panel{margin-bottom:0}}
+</style>
+</head>
+<body>
+<header><div class="head">
+ <div class="brand"><img src="./assets/logo.png" alt="โลโก้ PNJ-RAASU"><div><h1>PNJ-RAASU</h1><p>แอปพลิเคชันสำหรับใช้งานบนมือถือ</p></div></div>
+ <nav aria-label="เมนูหลัก">
+  <button class="active" data-page="home">หน้าหลัก</button>
+  <button data-page="install">ติดตั้งแอป</button>
+  <button data-page="updates">อัปเดต</button>
+  <button data-page="developer">ผู้พัฒนาแอป</button>
+ </nav>
+</div></header>
+<main class="wrap">
+<section id="home" class="page">
+ <div class="two">
+  <article class="panel">
+   <span class="status"><span class="dot"></span><span id="netStatus">กำลังตรวจสอบสถานะ</span></span>
+   <h2 style="margin-top:17px">ยินดีต้อนรับสู่ PNJ-RAASU</h2>
+   <p>ระบบพร้อมใช้งานผ่านเว็บเบราว์เซอร์ และสามารถเพิ่มลงในหน้าจอหลักเพื่อเปิดใช้งานในรูปแบบแอปได้</p>
+   <div class="actions"><button class="primary" id="installMain">วิธีติดตั้งแอป</button><button class="soft" id="checkMain">ตรวจสอบอัปเดต</button></div>
+  </article>
+  <article class="panel"><h3>สถานะระบบ</h3>
+   <p>เวอร์ชันปัจจุบัน: <strong id="versionLabel">—</strong></p>
+   <p>การเชื่อมต่อ: <strong id="connectionLabel">—</strong></p>
+   <p>การติดตั้ง: <strong id="installLabel">ตรวจสอบได้จากเมนูติดตั้ง</strong></p>
+   <p class="muted">แนะนำให้เปิดเว็บไซต์อย่างน้อยหนึ่งครั้งขณะออนไลน์</p>
+  </article>
+ </div>
+ <article class="panel" style="margin-top:15px"><h3>เกี่ยวกับแอป</h3><p>หน้านี้เป็นหน้าหลักของ PNJ-RAASU เวอร์ชัน PWA สามารถปรับเพิ่มโมดูลและบริการเฉพาะของแอปในรุ่นถัดไปได้ โดยคงระบบติดตั้งและอัปเดตไว้</p></article>
+</section>
+
+<section id="install" class="page hidden">
+ <article class="panel"><h2>ติดตั้ง PNJ-RAASU</h2><p>เลือกคำแนะนำให้ตรงกับอุปกรณ์ของคุณ</p>
+  <div class="tiles">
+   <div class="tile"><h3>Android · Chrome</h3><ol><li>เปิดเว็บไซต์ PNJ-RAASU ผ่าน Chrome</li><li>แตะเมนู ⋮ มุมขวาบน</li><li>เลือก “ติดตั้งแอป” หรือ “เพิ่มลงในหน้าจอหลัก”</li><li>ยืนยันการติดตั้ง</li></ol><button class="primary" id="androidInstall">ติดตั้งตอนนี้</button></div>
+   <div class="tile"><h3>iPhone / iPad · Safari</h3><ol><li>เปิดเว็บไซต์ผ่าน Safari</li><li>แตะปุ่มแชร์ (สี่เหลี่ยมมีลูกศรขึ้น)</li><li>เลือก “เพิ่มไปยังหน้าจอโฮม”</li><li>แตะ “เพิ่ม”</li></ol><p class="muted">iOS ไม่อนุญาตให้เว็บไซต์สั่งติดตั้งอัตโนมัติ ต้องเพิ่มผ่านเมนูแชร์</p></div>
+  </div>
+  <p class="notice" style="margin-top:15px">การติดตั้ง PWA ต้องเปิดผ่าน HTTPS เช่น GitHub Pages และไม่สามารถติดตั้งจากหน้า preview หรือไฟล์ในเครื่องโดยตรงได้</p>
+ </article>
+</section>
+
+<section id="updates" class="page hidden">
+ <article class="panel"><h2>อัปเดตแอป</h2><p>ตรวจสอบเวอร์ชันใหม่จากไฟล์ version.json บน GitHub Pages</p>
+  <p>เวอร์ชันที่ใช้อยู่: <strong id="currentVersion">—</strong></p><p>สถานะ: <strong id="updateStatus">ยังไม่ได้ตรวจสอบ</strong></p>
+  <div class="actions"><button class="primary" id="checkUpdate">ตรวจสอบอัปเดต</button><button class="soft hidden" id="applyUpdate">ติดตั้งอัปเดตและเปิดใหม่</button></div>
+  <p class="muted" id="updateDetail">ระบบจะตรวจสอบเมื่อเปิดแอป กลับมาที่แอป และตรวจซ้ำเป็นระยะขณะเปิดใช้งาน</p>
+  <p class="notice">ข้อจำกัด: การแจ้งเตือนอัปเดตจะทำงานเมื่อเปิดแอปหรือกลับมาใช้งาน ไม่สามารถรับประกันการแจ้งเตือนขณะปิดแอปได้หากไม่มีระบบ Push Server</p>
+ </article>
+</section>
+
+<section id="developer" class="page hidden">
+ <article class="panel"><h2>ผู้พัฒนาแอปพลิเคชัน</h2>
+  <div class="developer">
+   <img src="./assets/developer.png" alt="ภาพประกอบผู้พัฒนาแอป">
+   <div><h3>นายแทน นามวงค์</h3><p>ผู้พัฒนาแอปพลิเคชัน PNJ-RAASU</p><p class="muted">ขอบคุณที่ใช้งาน PNJ-RAASU</p></div>
+  </div>
+ </article>
+</section>
+<footer>PNJ-RAASU · Version <span id="footerVersion">1.0.1</span></footer>
+</main>
+<dialog id="updateDialog"><h2>มีเวอร์ชันใหม่</h2><p id="dialogText">พบอัปเดตใหม่ของ PNJ-RAASU</p><div class="actions"><button class="primary" id="dialogApply">อัปเดตตอนนี้</button><button class="soft" id="dialogLater">ภายหลัง</button></div></dialog>
+<script>
+const APP_VERSION='1.0.1';
+let deferredInstall=null, waitingWorker=null;
+const $=id=>document.getElementById(id);
+$('versionLabel').textContent=$('currentVersion').textContent=$('footerVersion').textContent=APP_VERSION;
+function onlineStatus(){ $('netStatus').textContent=navigator.onLine?'ออนไลน์':'ออฟไลน์ · ใช้งานไฟล์ที่บันทึกไว้'; $('connectionLabel').textContent=navigator.onLine?'ออนไลน์':'ออฟไลน์'; }
+onlineStatus(); addEventListener('online',onlineStatus); addEventListener('offline',onlineStatus);
+
+document.querySelectorAll('nav button').forEach(btn=>btn.addEventListener('click',()=>showPage(btn.dataset.page)));
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('hidden',p.id!==id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});}
+$('installMain').onclick=()=>showPage('install');
+$('checkMain').onclick=()=>{showPage('updates');checkForUpdate();};
+$('androidInstall').onclick=async()=>{if(deferredInstall){deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;}else alert('หากไม่ปรากฏหน้าต่างติดตั้ง ให้แตะเมนู ⋮ ใน Chrome แล้วเลือก “ติดตั้งแอป” หรือ “เพิ่มลงในหน้าจอหลัก”');};
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installLabel').textContent='พร้อมติดตั้ง';$('androidInstall').textContent='ติดตั้งแอป';});
+addEventListener('appinstalled',()=>{$('installLabel').textContent='ติดตั้งแล้ว';deferredInstall=null;});
+function isStandalone(){return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}
+if(isStandalone())$('installLabel').textContent='ติดตั้งแล้ว';
+
+async function checkForUpdate(){
+ $('updateStatus').textContent='กำลังตรวจสอบ…'; $('checkUpdate').disabled=true;
+ try{
+  const r=await fetch('./version.json?check='+Date.now(),{cache:'no-store'});
+  if(!r.ok)throw new Error('ไม่พบไฟล์ version.json');
+  const data=await r.json(), latest=String(data.version||'');
+  if(!latest)throw new Error('ข้อมูลเวอร์ชันไม่ถูกต้อง');
+  if(latest!==APP_VERSION){
+   $('updateStatus').textContent='พบเวอร์ชันใหม่: '+latest;
+   $('updateDetail').textContent=data.notes||'มีอัปเดตใหม่พร้อมใช้งาน';
+   $('applyUpdate').classList.remove('hidden');
+   $('dialogText').textContent='เวอร์ชัน '+latest+' พร้อมใช้งาน กรุณาอัปเดตเพื่อรับการปรับปรุงล่าสุด';
+   if($('updateDialog').showModal && !sessionStorage.getItem('updateDismissed'))$('updateDialog').showModal();
+  }else{
+   $('updateStatus').textContent='แอปเป็นเวอร์ชันล่าสุด';
+   $('updateDetail').textContent='ตรวจสอบล่าสุด: '+new Date().toLocaleString('th-TH');
+   $('applyUpdate').classList.add('hidden');
+  }
+ }catch(e){$('updateStatus').textContent='ตรวจสอบไม่ได้';$('updateDetail').textContent=e.message+' · โปรดลองใหม่เมื่อเชื่อมต่ออินเทอร์เน็ต';}
+ finally{$('checkUpdate').disabled=false;}
+}
+$('checkUpdate').onclick=checkForUpdate;
+function applyUpdate(){if(waitingWorker){waitingWorker.postMessage({type:'SKIP_WAITING'});}else location.reload();}
+$('applyUpdate').onclick=applyUpdate;$('dialogApply').onclick=()=>{ $('updateDialog').close();applyUpdate();};
+$('dialogLater').onclick=()=>{$('updateDialog').close();sessionStorage.setItem('updateDismissed','1');};
+
+if('serviceWorker'in navigator){
+ navigator.serviceWorker.register('./sw.js').then(reg=>{
+  if(reg.waiting){waitingWorker=reg.waiting;$('applyUpdate').classList.remove('hidden');}
+  reg.addEventListener('updatefound',()=>{
+   const worker=reg.installing;
+   worker.addEventListener('statechange',()=>{
+    if(worker.state==='installed'&&navigator.serviceWorker.controller){
+     waitingWorker=worker;$('updateStatus').textContent='มีไฟล์แอปเวอร์ชันใหม่พร้อมติดตั้ง';$('applyUpdate').classList.remove('hidden');
+    }
+   });
+  });
+  setInterval(()=>reg.update().catch(()=>{}),60*60*1000);
+ }).catch(err=>console.warn('Service worker:',err));
+ navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());
+}
+checkForUpdate();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&navigator.onLine){checkForUpdate();if(navigator.serviceWorker)navigator.serviceWorker.getRegistration().then(r=>r&&r.update());}});
+setInterval(()=>{if(navigator.onLine)checkForUpdate();},6*60*60*1000);
+</script>
+</body></html>
