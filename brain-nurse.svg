@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 30 260 370">
+<defs>
+<g id="b"><circle cx="110" cy="178" r="48"/><circle cx="148" cy="122" r="54"/><circle cx="215" cy="106" r="58"/><circle cx="278" cy="130" r="52"/><circle cx="302" cy="192" r="48"/><circle cx="282" cy="250" r="46"/><circle cx="205" cy="264" r="58"/><circle cx="125" cy="246" r="48"/><ellipse cx="205" cy="187" rx="100" ry="85"/></g>
+<radialGradient id="br" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0da"/><stop offset="1" stop-color="#ffa3b8"/></radialGradient>
+<linearGradient id="co" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e6eff3"/></linearGradient>
+</defs>
+<ellipse cx="130" cy="392" rx="78" ry="8" fill="#0b3d2a" opacity=".13"/>
+<!-- legs & shoes -->
+<rect x="102" y="318" width="22" height="58" rx="10" fill="#f58fa8"/><rect x="136" y="318" width="22" height="58" rx="10" fill="#f58fa8"/>
+<path d="M92 380 Q92 366 108 366 L126 366 L126 386 Q126 392 118 392 L98 392 Q92 392 92 386Z" fill="#fff" stroke="#c5d3da" stroke-width="3"/>
+<path d="M168 380 Q168 366 152 366 L134 366 L134 386 Q134 392 142 392 L162 392 Q168 392 168 386Z" fill="#fff" stroke="#c5d3da" stroke-width="3"/>
+<path d="M93 384h32M135 384h32" stroke="#2fb36b" stroke-width="3"/>
+<!-- left arm (down) -->
+<path d="M82 262 C68 290 66 308 70 322" fill="none" stroke="#c9d6dc" stroke-width="30" stroke-linecap="round"/>
+<path d="M82 262 C68 290 66 308 70 322" fill="none" stroke="#fff" stroke-width="24" stroke-linecap="round"/>
+<circle cx="70" cy="334" r="14" fill="#fff" stroke="#c9d6dc" stroke-width="3"/>
+<!-- coat -->
+<path d="M72 340 C70 270 98 244 130 242 C162 244 190 270 188 340 Q130 352 72 340Z" fill="url(#co)" stroke="#c9d6dc" stroke-width="3"/>
+<path d="M104 246 L130 292 L156 246Z" fill="#2fb36b"/><path d="M114 246 L130 276 L146 246Z" fill="#fff"/>
+<path d="M104 250 C96 282 112 300 130 300 C148 300 164 282 156 250" fill="none" stroke="#5d7a86" stroke-width="4" stroke-linecap="round"/>
+<circle cx="130" cy="304" r="7" fill="#dfe8ec" stroke="#5d7a86" stroke-width="3"/>
+<rect x="150" y="288" width="26" height="22" rx="5" fill="#fff" stroke="#4a98e6" stroke-width="3"/><text x="163" y="303" text-anchor="middle" font-family="Arial" font-weight="800" font-size="10" fill="#1c3a7a">PNJ</text>
+<!-- right arm (waving) -->
+<path d="M178 262 C206 262 214 236 214 206" fill="none" stroke="#c9d6dc" stroke-width="30" stroke-linecap="round"/>
+<path d="M178 262 C206 262 214 236 214 206" fill="none" stroke="#fff" stroke-width="24" stroke-linecap="round"/>
+<g fill="#fff" stroke="#c9d6dc" stroke-width="3"><circle cx="214" cy="182" r="17"/><circle cx="200" cy="168" r="6"/><circle cx="211" cy="162" r="6"/><circle cx="222" cy="163" r="6"/><circle cx="231" cy="171" r="6"/></g>
+<circle cx="214" cy="182" r="15" fill="#fff"/>
+<path d="M236 150 q8 10 4 22M243 144 q12 14 6 32" fill="none" stroke="#ffc72c" stroke-width="3.5" stroke-linecap="round"/>
+<!-- head -->
+<g transform="translate(27 62) scale(.5)">
+<use href="#b" fill="#f58fa8" stroke="#f58fa8" stroke-width="12"/><use href="#b" fill="url(#br)"/>
+<g fill="none" stroke="#f7a3b8" stroke-width="5" stroke-linecap="round"><path d="M205 72 C195 92 212 104 204 122"/><path d="M104 150 C122 146 130 160 122 172"/><path d="M304 152 C288 148 280 162 288 174"/></g>
+<ellipse cx="152" cy="205" rx="22" ry="27" fill="#3a2118"/><circle cx="160" cy="194" r="9" fill="#fff"/><circle cx="146" cy="216" r="4.5" fill="#fff"/>
+<path d="M236 208 Q258 186 282 208" fill="none" stroke="#3a2118" stroke-width="8" stroke-linecap="round"/>
+<ellipse cx="116" cy="240" rx="19" ry="12" fill="#ff7f9d" opacity=".55"/><ellipse cx="296" cy="240" rx="19" ry="12" fill="#ff7f9d" opacity=".55"/>
+<path d="M180 232 Q206 240 232 232 Q230 268 206 268 Q182 268 180 232Z" fill="#c4304f"/><path d="M193 261 Q206 249 219 261 Q206 270 193 261Z" fill="#ff93a8"/>
+<path d="M126 108 C128 70 160 52 205 52 C250 52 282 70 284 108 C245 120 165 120 126 108Z" fill="#fff" stroke="#cfdce2" stroke-width="5" stroke-linejoin="round"/>
+<rect x="195" y="60" width="20" height="40" rx="5" fill="#2fb36b"/><rect x="185" y="70" width="40" height="20" rx="5" fill="#2fb36b"/>
+</g>
+</svg>

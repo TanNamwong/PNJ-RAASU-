@@ -1,27 +1,48 @@
-const VERSION='1.0.2';
-const CACHE='pnj-raasu-shell-v'+VERSION;
-const SHELL=['./','./index.html','./manifest.json','./version.json','./logo.png','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./apple-touch-icon.png','./developer.png'];
-self.addEventListener('install',e=>{
- // cache:'reload' ข้ามแคช HTTP ของ GitHub Pages เพื่อให้ได้ไฟล์ล่าสุดจริง
- e.waitUntil(caches.open(CACHE).then(c=>Promise.all(SHELL.map(u=>c.add(new Request(u,{cache:'reload'}))))));
+/* PNJ RAASU service worker  — เปลี่ยน VERSION ทุกครั้งที่อัพเดท (ใช้ bump_version.py) */
+const VERSION = '1.6.0';
+const CACHE = 'pnj-raasu-' + VERSION;
+const SHELL = [
+  './', './index.html', './style.css', './app.js', './manifest.webmanifest',
+  './icon-192.png', './icon-512.png',
+  './maskable-512.png', './apple-touch-icon.png', './nurse-full.png', './brain-nurse.svg'
+];
+
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)));
+  // ไม่ skipWaiting อัตโนมัติ: รอให้ผู้ใช้กด "อัพเดทตอนนี้"
 });
-self.addEventListener('activate',e=>{e.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));await self.clients.claim();})());});
-self.addEventListener('message',e=>{if(e.data&&e.data.type==='SKIP_WAITING')self.skipWaiting();});
-self.addEventListener('fetch',e=>{
- const req=e.request; if(req.method!=='GET')return;
- const url=new URL(req.url); if(url.origin!==self.location.origin)return;
- if(url.pathname.endsWith('/version.json')){
-  e.respondWith(fetch(req,{cache:'no-store'}).catch(()=>caches.match('./version.json')));return;
- }
- if(req.mode==='navigate'){
-  e.respondWith(fetch(req,{cache:'no-cache'}).then(res=>{
-   if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put('./index.html',copy));}
-   return res;
-  }).catch(()=>caches.match('./index.html')));return;
- }
- // stale-while-revalidate สำหรับไฟล์อื่น
- e.respondWith(caches.match(req).then(hit=>{
-  const net=fetch(req).then(res=>{if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put(req,copy));}return res;}).catch(()=>hit);
-  return hit||net;
- }));
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k.startsWith('pnj-raasu-') && k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('message', e => {
+  if (e.data === 'SKIP_WAITING') self.skipWaiting();
+  if (e.data === 'GET_VERSION' && e.source) e.source.postMessage({ type: 'VERSION', version: VERSION });
+});
+
+self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.origin !== location.origin) return;          // ลิงก์ภายนอกไม่เกี่ยวกับแอพ
+  if (url.pathname.endsWith('/version.json')) return;  // ตรวจอัพเดทต้องดึงจากเน็ตเสมอ
+  e.respondWith(
+    caches.match(req, { ignoreSearch: true }).then(hit => {
+      if (hit) return hit;
+      return fetch(req).catch(() => req.mode === 'navigate' ? caches.match('./index.html') : Response.error());
+    })
+  );
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window' }).then(list => {
+    if (list.length) return list[0].focus();
+    return self.clients.openWindow('./');
+  }));
 });
