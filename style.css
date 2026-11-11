@@ -238,3 +238,41 @@ body{background:linear-gradient(180deg,#e6f3ee 0,var(--bg) 220px)}
 .eqbot{display:flex;gap:8px;margin-top:8px}
 .eqbot input:first-child{width:90px;flex:none}
 .eqbot input:last-child{flex:1;min-width:0}
+
+/* ===== v1.6.1 หัวแอพ + การ์ดทักทาย ให้เข้ากัน (navy + เขียว + ฟ้า) ===== */
+.top{gap:12px;padding:10px 0 14px}
+.brand{min-width:0;flex:1}
+.brand h1{font-size:clamp(19px,5.6vw,24px);line-height:1.12;font-weight:800;letter-spacing:.2px;color:#1c3a7a;white-space:nowrap}
+.brand h1 span{background:linear-gradient(90deg,#1e9d57,#2f80d6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#1e9d57}
+.brand p{margin:3px 0 0;font-size:11.5px;font-weight:600;color:#4a6a72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p b{color:#1e8f4e;font-weight:800;letter-spacing:.4px}
+.brand p i{font-style:normal;color:#9ab5ad;margin:0 2px}
+.hello .ht{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.hello h2{margin:0;font-size:30px;line-height:1.1;font-weight:800;letter-spacing:.2px}
+.hello h2 .gt{background:linear-gradient(90deg,#1c3a7a,#1e9d57);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#1c3a7a}
+.hello h2 .wave{display:inline-block;font-size:26px;transform-origin:70% 70%;animation:wave 2.4s ease-in-out 1s 2}
+@keyframes wave{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(16deg)}20%,40%{transform:rotate(-8deg)}50%{transform:rotate(10deg)}}
+.hello p.chip{margin:0;display:inline-block;font-size:13.5px;font-weight:600;line-height:1.45;color:#1e6b45;background:linear-gradient(135deg,#e3f5ea,#e2eefb);border-radius:14px;padding:7px 12px;box-shadow:inset 0 0 0 1px #d3e8df}
+.hello.small .ht{gap:4px}
+.hello.small h2{font-size:22px;color:#1c3a7a}
+.hello.small p{margin:0;font-weight:600;color:#4a6a72}
+
+/* ===== v1.7 การ์ตูนโบกมือได้ ===== */
+.nurse{position:relative;display:inline-block;line-height:0;flex:none}
+.nurse img{display:block}
+.nurse img.hand,.nurse img.snd{position:absolute;height:auto;max-width:none;margin:0;border-radius:0;box-shadow:none;pointer-events:none}
+.hello .art .nurse img.hand,.dev .stage .nurse img.hand{left:76.263%;top:26.752%;width:20.455%;height:auto;transform-origin:53.086% 94.118%;animation:nwave 3.2s ease-in-out .6s infinite}
+.hello .art .nurse img.snd,.dev .stage .nurse img.snd{left:93.182%;top:36.146%;width:6.818%;height:auto;animation:nsnd 3.2s ease-in-out .6s infinite}
+.hello .art .nurse img.base{margin:0 -4px 0 0}
+@keyframes nwave{0%,62%,100%{transform:rotate(0)}8%{transform:rotate(-16deg)}18%{transform:rotate(12deg)}28%{transform:rotate(-16deg)}38%{transform:rotate(12deg)}48%{transform:rotate(-14deg)}56%{transform:rotate(6deg)}}
+@keyframes nsnd{0%,62%,100%{opacity:.35;transform:translateX(0)}8%,28%,48%{opacity:1;transform:translateX(2px)}18%,38%,56%{opacity:.45;transform:translateX(0)}}
+@media (prefers-reduced-motion:reduce){.nurse img.hand,.nurse img.snd{animation:none!important}}
+
+/* ===== v1.8 หน่วยงานในสมุดโทรศัพท์ ===== */
+.cats.pd{margin:10px 0 4px}
+.cats button small{opacity:.7;font-weight:700;margin-left:2px}
+.cats button.mg{background:#fff;box-shadow:inset 0 0 0 1.5px #c3d3ce;color:#58706e}
+.cats.wrapc{flex-wrap:wrap;overflow:visible}
+h4.grp{margin:16px 2px 8px;font-size:14.5px;color:#1c3a7a;display:flex;align-items:center;gap:6px}
+h4.grp small{background:#e6f3ee;color:#1e8f4e;border-radius:999px;padding:1px 8px;font-size:12px}
+#pNewDept{margin-top:4px}

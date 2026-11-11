@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION = '1.6.0';
+const APP_VERSION = '1.8.0';
 const KEY = 'pnj_raasu_v1';
 const ICONS = ['🌡️','❄️','🧊','🩸','💉','🛡️','📋','❤️','🛏️','💧','🩺','💊','🩹','🧰','🔬','🧪','🦷','🫁','🧠','🚑','🧼','🧴','🏥','⭐','👑','🏆','📅','📝','📊','🔔'];
 const THEMES = {
@@ -45,6 +45,7 @@ function defaults() {
       { id: 'g11', name: 'สวนล้างกระเพาะอาหาร', sub: 'Gastric Lavage', url: '', wi: '', eq: [], icon: '🥤|💧', color: '#5d7a86' }
     ],
     phones: [],
+    depts: ['ห้องฉุกเฉิน', 'พยาบาล/หอผู้ป่วย', 'โภชนาการ', 'เวรเปล', 'รปภ.', 'ช่าง/ซ่อมบำรุง', 'เภสัช', 'ห้องปฏิบัติการ', 'สำนักงาน/IT'],
     favs: [], history: [], notify: false, dismissInstall: 0
   };
 }
@@ -75,6 +76,7 @@ const isStandalone = () => matchMedia('(display-mode: standalone)').matches || n
 const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
 /* ---------- views ---------- */
+const nurseHTML = alt => `<span class="nurse"><img class="base" src="nurse-base.png" alt="${esc(alt || '')}"><img class="hand" src="nurse-hand.png" alt=""><img class="snd" src="nurse-sound.png" alt=""></span>`;
 let tab = 'home';
 function setTab(t) {
   tab = t; col = t === 'guide' ? 'guides' : 'menus';
@@ -103,7 +105,7 @@ function cardHTML(m) {
 function render() {
   const v = $('#view');
   if (tab === 'home') {
-    v.innerHTML = `<section class="hello"><div class="ht"><h2>สวัสดี</h2><p>เลือกเมนูเอกสารที่ต้องการ</p></div><div class="art"><img src="brain-nurse.svg" alt=""><img src="nurse-full.png" alt=""></div></section>
+    v.innerHTML = `<section class="hello"><div class="ht"><h2><span class="gt">สวัสดี</span> <span class="wave">👋</span></h2><p class="chip">✨ เลือกเมนูเอกสาร<br>ที่ต้องการได้เลย</p></div><div class="art"><img src="brain-nurse.svg" alt="">${nurseHTML()}</div></section>
       <div class="grid" data-d="${density(db.menus.length + 1, false)}">${db.menus.map(cardHTML).join('')}
         <button class="card add" data-act="add"><span><span class="plus">+</span>เพิ่มลิงก์ใหม่</span></button></div>`;
   } else if (tab === 'guide') {
@@ -131,7 +133,7 @@ function aboutHTML() {
   const inst = isStandalone()
     ? '<p class="hint">✅ ติดตั้งแล้ว (กำลังใช้งานในโหมดแอพ)</p>'
     : '<button class="btn gold" data-act="install">📲 ติดตั้งแอพลงหน้าจอหลัก</button>';
-  return `<div class="dev"><div class="stage"><img src="nurse-full.png" alt="นายแทน นามวงค์"></div>
+  return `<div class="dev"><div class="stage">${nurseHTML('นายแทน นามวงค์')}</div>
       <div class="role">ผู้พัฒนาแอพ</div><h4>นายแทน นามวงค์</h4>
       <p>PNJ RAASU • Smart Link, Smart Care</p></div>
     <h3 class="sec">เกี่ยวกับแอพ</h3>
@@ -285,7 +287,7 @@ function editSheet(id) {
   if (!old) setTimeout(() => $('#fName', ov).focus(), 50);
 }
 function exportData() {
-  const blob = new Blob([JSON.stringify({ app: 'PNJ RAASU', menus: db.menus, guides: db.guides, phones: db.phones, favs: db.favs }, null, 1)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify({ app: 'PNJ RAASU', menus: db.menus, guides: db.guides, phones: db.phones, depts: db.depts, favs: db.favs }, null, 1)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pnj-raasu-backup.json';
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
@@ -305,7 +307,9 @@ function importData(e) {
       }));
       db.menus = clean(j.menus);
       if (Array.isArray(j.guides)) db.guides = clean(j.guides);
-      if (Array.isArray(j.phones)) db.phones = j.phones.filter(p => p && p.name && p.num).map(p => ({ id: String(p.id || uid()), name: String(p.name).slice(0, 60), num: String(p.num).slice(0, 40), note: String(p.note || '').slice(0, 60), icon: String(p.icon || '📞').slice(0, 8) }));
+      if (Array.isArray(j.phones)) db.phones = j.phones.filter(p => p && p.name && p.num).map(p => ({ id: String(p.id || uid()), name: String(p.name).slice(0, 60), num: String(p.num).slice(0, 40), note: String(p.note || '').slice(0, 60), icon: String(p.icon || '📞').slice(0, 8), dept: String(p.dept || '').slice(0, 40) }));
+      if (Array.isArray(j.depts)) db.depts = [...new Set(j.depts.map(d => String(d).trim().slice(0, 40)).filter(Boolean))];
+      db.phones.forEach(p => { if (p.dept && !db.depts.includes(p.dept)) db.depts.push(p.dept); });
       db.favs = (j.favs || []).filter(x => allMenus().some(m => m.id === x));
       save(); closeSheet(); render(); toast('นำเข้าข้อมูลแล้ว');
     } catch (x) { toast('ไฟล์สำรองไม่ถูกต้อง'); }
@@ -314,44 +318,126 @@ function importData(e) {
 }
 
 /* ---------- phone ---------- */
-const PICONS = ['📞','🏥','🩺','🚑','💊','🧪','🩸','🛏️','👩‍⚕️','👨‍⚕️','🧼','🔬','🍽️','🚗','🔧','💻'];
+const PCATS = {
+  'ฉุกเฉิน': ['🚨','🚑','🆘','⚡','🔥','🫀','🩸','🧯','☎️','📟','⚠️','🏥'],
+  'พยาบาล': ['💉','💧','👩‍⚕️','👨‍⚕️','🩺','💊','🩹','🌡️','🧤','😷','🛏️','🩼'],
+  'แผนก': ['🏥','🫀','🫁','🧠','🦴','🦷','👁️','👂','🤰','👶','🧒','🧓','🩻','🧬','🔬','🧪','🧫','💊','🩸','♿','🧖','🚿','🧘','🦠'],
+  'โภชนาการ': ['🍽️','🥗','🍚','🥣','🍎','🥛','🥤','🍞','🥄','🍳','🛒','🧂'],
+  'เวรเปล/รปภ.': ['🛏️','♿','🚪','🛗','🚶','🧳','🚐','🛡️','👮','💂','🚓','🔒','🔑','📹','🔦','🚧'],
+  'ช่าง': ['🔧','🛠️','🧰','⚙️','🔌','💡','🔋','❄️','🚰','🚽','🔥','🧱','🪜','🧹','🗑️','♻️','🚗','🚚'],
+  'สำนักงาน': ['💻','🖥️','🖨️','📠','📋','🗂️','📅','💰','🧾','👥','📚','📢','🧼','🧺','📞','🏢']
+};
+const PICONS = Object.values(PCATS).flat();
 const telOf = n => String(n).replace(/[^\d+*#,;]/g, '');
+let phoneDept = '';
+const deptCount = d => db.phones.filter(p => (p.dept || '') === d).length;
+function deptChips() {
+  const c = (v, label, n) => `<button type="button" data-pd="${esc(v)}" class="${phoneDept === v ? 'on' : ''}">${esc(label)}${n !== undefined ? ` <small>${n}</small>` : ''}</button>`;
+  return c('', 'ทั้งหมด', db.phones.length) + db.depts.map(d => c(d, d, deptCount(d))).join('') + `<button type="button" class="mg" data-pdm>⚙ จัดการหน่วยงาน</button>`;
+}
+function phoneRow(p) {
+  return `<div class="item"><span class="av">${esc(p.icon || '📞')}</span>
+    <span class="t"><b>${esc(p.name)}</b><small>${esc(p.num)}${p.note ? ' · ' + esc(p.note) : ''}</small></span>
+    <button class="ib" data-pedit="${p.id}" aria-label="แก้ไข">✎</button>
+    <a class="callbtn" href="tel:${esc(telOf(p.num))}" aria-label="โทร ${esc(p.name)}">📞</a></div>`;
+}
 function phoneItems() {
   const q = phoneQ.trim().toLowerCase();
-  const l = db.phones.filter(p => !q || (p.name + ' ' + p.num + ' ' + (p.note || '')).toLowerCase().includes(q))
+  const l = db.phones.filter(p => (!phoneDept || (p.dept || '') === phoneDept) && (!q || (p.name + ' ' + p.num + ' ' + (p.note || '') + ' ' + (p.dept || '')).toLowerCase().includes(q)))
     .sort((a, b) => a.name.localeCompare(b.name, 'th'));
   if (!db.phones.length) return '<div class="empty"><b>📞</b>ยังไม่มีเบอร์โทร<br>กด ＋ เพื่อเพิ่มเบอร์ภายใน/เบอร์ติดต่อที่ใช้บ่อย</div>';
   if (!l.length) return '<div class="empty"><b>🔍</b>ไม่พบรายการที่ค้นหา</div>';
-  return `<div class="list">${l.map(p => `<div class="item"><span class="av">${esc(p.icon || '📞')}</span>
-    <span class="t"><b>${esc(p.name)}</b><small>${esc(p.num)}${p.note ? ' · ' + esc(p.note) : ''}</small></span>
-    <button class="ib" data-pedit="${p.id}" aria-label="แก้ไข">✎</button>
-    <a class="callbtn" href="tel:${esc(telOf(p.num))}" aria-label="โทร ${esc(p.name)}">📞</a></div>`).join('')}</div>`;
+  if (phoneDept) return `<div class="list">${l.map(phoneRow).join('')}</div>`;
+  const known = new Set(db.depts), groups = [...db.depts, ...new Set(l.map(p => p.dept || '').filter(d => d && !known.has(d))), ''];
+  return groups.map(d => {
+    const g = l.filter(p => (p.dept || '') === d); if (!g.length) return '';
+    return `<h4 class="grp">🏷 ${d ? esc(d) : 'ไม่ระบุหน่วยงาน'} <small>${g.length}</small></h4><div class="list">${g.map(phoneRow).join('')}</div>`;
+  }).join('');
 }
 function phoneHTML() {
   return `<h3 class="sec">📞 สมุดโทรศัพท์</h3>
-    <div class="pbar"><input type="search" id="pq" placeholder="ค้นหาชื่อ / เบอร์ / แผนก" value="${esc(phoneQ)}" autocomplete="off"><button class="padd" data-padd aria-label="เพิ่มเบอร์">＋</button></div>
+    <div class="pbar"><input type="search" id="pq" placeholder="ค้นหาชื่อ / เบอร์ / หน่วยงาน" value="${esc(phoneQ)}" autocomplete="off"><button class="padd" data-padd aria-label="เพิ่มเบอร์">＋</button></div>
+    <div id="pdepts" class="cats pd">${deptChips()}</div>
     <div id="plist">${phoneItems()}</div>`;
+}
+function deptSheet() {
+  const ov = openSheet('จัดการหน่วยงาน', `
+    <div class="list">${db.depts.map((d, i) => `<div class="item"><span class="t"><b>${esc(d)}</b><small>${deptCount(d)} เบอร์</small></span>
+      <button class="ib" data-dup="${i}" ${i === 0 ? 'disabled' : ''} aria-label="เลื่อนขึ้น">↑</button>
+      <button class="ib" data-ddown="${i}" ${i === db.depts.length - 1 ? 'disabled' : ''} aria-label="เลื่อนลง">↓</button>
+      <button class="ib" data-dren="${i}" aria-label="เปลี่ยนชื่อ">✎</button>
+      <button class="ib del" data-ddel="${i}" aria-label="ลบ">🗑</button></div>`).join('') || '<div class="empty">ยังไม่มีหน่วยงาน</div>'}</div>
+    <label class="f" for="dNew">＋ เพิ่มหน่วยงานใหม่</label>
+    <input type="text" id="dNew" maxlength="40" placeholder="เช่น ห้องผ่าตัด, ไอซียู">
+    <div class="err" id="dErr"></div>
+    <button class="btn" data-dadd>＋ เพิ่ม</button>`);
+  const done = () => { save(); deptSheet(); if (tab === 'phone') render(); };
+  ov.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+    if (d.dup !== undefined || d.ddown !== undefined) {
+      const i = +(d.dup ?? d.ddown), j = i + (d.dup !== undefined ? -1 : 1);
+      if (j >= 0 && j < db.depts.length) { [db.depts[i], db.depts[j]] = [db.depts[j], db.depts[i]]; done(); }
+    } else if (d.dren !== undefined) {
+      const old = db.depts[+d.dren], n = (prompt('ชื่อหน่วยงานใหม่', old) || '').trim().slice(0, 40);
+      if (!n || n === old) return;
+      if (db.depts.includes(n)) { toast('มีหน่วยงานนี้อยู่แล้ว'); return; }
+      db.depts[+d.dren] = n; db.phones.forEach(p => { if (p.dept === old) p.dept = n; }); if (phoneDept === old) phoneDept = n; done();
+    } else if (d.ddel !== undefined) {
+      const old = db.depts[+d.ddel];
+      if (confirm(`ลบหน่วยงาน "${old}" ?\n(เบอร์ในหน่วยงานนี้จะกลายเป็น "ไม่ระบุหน่วยงาน")`)) {
+        db.depts.splice(+d.ddel, 1); db.phones.forEach(p => { if (p.dept === old) p.dept = ''; }); if (phoneDept === old) phoneDept = ''; done();
+      }
+    } else if (d.dadd !== undefined) {
+      const n = $('#dNew', ov).value.trim();
+      if (!n) { $('#dErr', ov).textContent = 'กรุณาใส่ชื่อหน่วยงาน'; return; }
+      if (db.depts.includes(n)) { $('#dErr', ov).textContent = 'มีหน่วยงานนี้อยู่แล้ว'; return; }
+      db.depts.push(n); done(); toast('เพิ่มหน่วยงานแล้ว');
+    }
+  });
 }
 document.addEventListener('input', e => { if (e.target.id === 'pq') { phoneQ = e.target.value; $('#plist').innerHTML = phoneItems(); } });
 function phoneSheet(id) {
   const old = db.phones.find(p => p.id === id);
-  const p = old ? { ...old } : { name: '', num: '', note: '', icon: '📞' };
+  const p = old ? { ...old } : { name: '', num: '', note: '', icon: '📞', dept: phoneDept };
   const ov = openSheet(old ? 'แก้ไขเบอร์โทร' : 'เพิ่มเบอร์โทร', `
     <label class="f" for="pName">👤 ชื่อ / แผนก</label><input type="text" id="pName" maxlength="60" placeholder="เช่น ห้องฉุกเฉิน, คุณหมอสมชาย" value="${esc(p.name)}">
     <label class="f" for="pNum">📞 เบอร์โทร</label><input type="text" id="pNum" inputmode="tel" maxlength="40" placeholder="เช่น 1234 หรือ 02-123-4567" value="${esc(p.num)}">
+    <label class="f">🏷 หน่วยงาน</label><div id="pDepts" class="cats wrapc"></div>
+    <input type="text" id="pNewDept" maxlength="40" placeholder="หรือพิมพ์ชื่อหน่วยงานใหม่ (จะเพิ่มในรายการให้)">
     <label class="f" for="pNote">📝 หมายเหตุ (ไม่บังคับ)</label><input type="text" id="pNote" maxlength="60" placeholder="เช่น ตึก A ชั้น 3" value="${esc(p.note || '')}">
-    <label class="f">ไอคอน</label><div class="icons" id="pIcons">${PICONS.map(i => `<button type="button" data-i="${i}" class="${i === p.icon ? 'on' : ''}">${i}</button>`).join('')}</div>
+    <label class="f">ไอคอน <span id="pCur" style="font-size:22px;vertical-align:middle"></span></label>
+    <div id="pCats" class="cats"></div><div class="icons" id="pIcons"></div>
+    <input type="text" id="pEmoji" class="emo" placeholder="หรือพิมพ์/วางอีโมจิจากคีย์บอร์ดได้เลย 😀">
     <div class="err" id="pErr"></div>
     <button class="btn" id="pSave">✔ บันทึก</button>${old ? '<button class="btn warn" id="pDel">🗑 ลบเบอร์นี้</button>' : ''}`);
+  let pcat = Object.keys(PCATS).find(c => PCATS[c].includes(p.icon)) || Object.keys(PCATS)[0];
+  const paintP = () => {
+    $('#pCur', ov).textContent = p.icon;
+    $('#pCats', ov).innerHTML = Object.keys(PCATS).map(c => `<button type="button" data-pc="${c}" class="${c === pcat ? 'on' : ''}">${c}</button>`).join('');
+    $('#pIcons', ov).innerHTML = PCATS[pcat].map(i => `<button type="button" data-i="${i}" class="${i === p.icon ? 'on' : ''}">${i}</button>`).join('');
+  };
+  const paintD = () => {
+    const c = (v, label) => `<button type="button" data-ds="${esc(v)}" class="${(p.dept || '') === v ? 'on' : ''}">${esc(label)}</button>`;
+    const extra = p.dept && !db.depts.includes(p.dept) ? [p.dept] : [];
+    $('#pDepts', ov).innerHTML = c('', 'ไม่ระบุ') + [...db.depts, ...extra].map(d => c(d, d)).join('');
+  };
+  paintD(); paintP();
+  $('#pNewDept', ov).addEventListener('input', e => { if (e.target.value.trim()) { p.dept = ''; paintD(); } });
+  $('#pEmoji', ov).addEventListener('input', e => { const g = seg(e.target.value.trim())[0]; if (!g) return; p.icon = g; e.target.value = ''; paintP(); });
   ov.addEventListener('click', e => {
+    const ds = e.target.closest('[data-ds]');
+    if (ds) { p.dept = ds.dataset.ds; $('#pNewDept', ov).value = ''; paintD(); }
+    const pc = e.target.closest('[data-pc]');
+    if (pc) { pcat = pc.dataset.pc; paintP(); }
     const i = e.target.closest('[data-i]');
-    if (i) { p.icon = i.dataset.i; ov.querySelectorAll('#pIcons button').forEach(b => b.classList.toggle('on', b === i)); }
+    if (i) { p.icon = i.dataset.i; paintP(); }
     if (e.target.closest('#pDel')) { if (confirm(`ลบ "${old.name}" ?`)) { db.phones = db.phones.filter(x => x.id !== old.id); save(); closeSheet(); render(); toast('ลบแล้ว'); } }
     if (e.target.closest('#pSave')) {
       const name = $('#pName', ov).value.trim(), num = $('#pNum', ov).value.trim();
       if (!name) { $('#pErr', ov).textContent = 'กรุณาใส่ชื่อ'; return; }
       if (!telOf(num)) { $('#pErr', ov).textContent = 'กรุณาใส่เบอร์โทร'; return; }
-      Object.assign(p, { name, num, note: $('#pNote', ov).value.trim() });
+      const nd = $('#pNewDept', ov).value.trim().slice(0, 40); if (nd) { p.dept = nd; if (!db.depts.includes(nd)) db.depts.push(nd); }
+      Object.assign(p, { name, num, note: $('#pNote', ov).value.trim(), dept: p.dept || '' });
       if (old) Object.assign(old, p); else db.phones.push({ ...p, id: uid() });
       save(); closeSheet(); render(); toast('บันทึกแล้ว');
     }
@@ -380,6 +466,9 @@ document.addEventListener('click', e => {
     if (i < 0) db.favs.push(id); else db.favs.splice(i, 1);
     save(); render(); toast(i < 0 ? 'เพิ่มในรายการโปรดแล้ว' : 'นำออกจากรายการโปรดแล้ว'); return;
   }
+  const pd = e.target.closest('[data-pd]');
+  if (pd) { phoneDept = pd.dataset.pd; $('#pdepts').innerHTML = deptChips(); $('#plist').innerHTML = phoneItems(); return; }
+  if (e.target.closest('[data-pdm]')) return deptSheet();
   const pe = e.target.closest('[data-pedit]'); if (pe) return phoneSheet(pe.dataset.pedit);
   if (e.target.closest('[data-padd]')) return phoneSheet();
   const tb = e.target.closest('#tabs button'); if (tb) return setTab(tb.dataset.tab);

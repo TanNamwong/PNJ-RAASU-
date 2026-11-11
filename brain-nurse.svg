@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 30 260 370">
+<style>
+.hand{transform-origin:214px 204px;animation:w 3s ease-in-out infinite}
+.snd{animation:s 3s ease-in-out infinite}
+@keyframes w{0%,62%,100%{transform:rotate(0)}8%{transform:rotate(-20deg)}18%{transform:rotate(16deg)}28%{transform:rotate(-20deg)}38%{transform:rotate(16deg)}48%{transform:rotate(-16deg)}56%{transform:rotate(6deg)}}
+@keyframes s{0%,62%,100%{opacity:.35}8%,28%,48%{opacity:1}18%,38%,56%{opacity:.45}}
+@media (prefers-reduced-motion:reduce){.hand,.snd{animation:none}}
+</style>
 <defs>
 <g id="b"><circle cx="110" cy="178" r="48"/><circle cx="148" cy="122" r="54"/><circle cx="215" cy="106" r="58"/><circle cx="278" cy="130" r="52"/><circle cx="302" cy="192" r="48"/><circle cx="282" cy="250" r="46"/><circle cx="205" cy="264" r="58"/><circle cx="125" cy="246" r="48"/><ellipse cx="205" cy="187" rx="100" ry="85"/></g>
 <radialGradient id="br" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0da"/><stop offset="1" stop-color="#ffa3b8"/></radialGradient>
@@ -23,9 +30,10 @@
 <!-- right arm (waving) -->
 <path d="M178 262 C206 262 214 236 214 206" fill="none" stroke="#c9d6dc" stroke-width="30" stroke-linecap="round"/>
 <path d="M178 262 C206 262 214 236 214 206" fill="none" stroke="#fff" stroke-width="24" stroke-linecap="round"/>
-<g fill="#fff" stroke="#c9d6dc" stroke-width="3"><circle cx="214" cy="182" r="17"/><circle cx="200" cy="168" r="6"/><circle cx="211" cy="162" r="6"/><circle cx="222" cy="163" r="6"/><circle cx="231" cy="171" r="6"/></g>
+<g class="hand"><g fill="#fff" stroke="#c9d6dc" stroke-width="3"><circle cx="214" cy="182" r="17"/><circle cx="200" cy="168" r="6"/><circle cx="211" cy="162" r="6"/><circle cx="222" cy="163" r="6"/><circle cx="231" cy="171" r="6"/></g>
 <circle cx="214" cy="182" r="15" fill="#fff"/>
-<path d="M236 150 q8 10 4 22M243 144 q12 14 6 32" fill="none" stroke="#ffc72c" stroke-width="3.5" stroke-linecap="round"/>
+</g>
+<g class="snd"><path d="M236 150 q8 10 4 22M243 144 q12 14 6 32" fill="none" stroke="#ffc72c" stroke-width="3.5" stroke-linecap="round"/></g>
 <!-- head -->
 <g transform="translate(27 62) scale(.5)">
 <use href="#b" fill="#f58fa8" stroke="#f58fa8" stroke-width="12"/><use href="#b" fill="url(#br)"/>

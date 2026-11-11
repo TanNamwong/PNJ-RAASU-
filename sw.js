@@ -1,10 +1,10 @@
 /* PNJ RAASU service worker  — เปลี่ยน VERSION ทุกครั้งที่อัพเดท (ใช้ bump_version.py) */
-const VERSION = '1.6.0';
+const VERSION = '1.8.0';
 const CACHE = 'pnj-raasu-' + VERSION;
 const SHELL = [
   './', './index.html', './style.css', './app.js', './manifest.webmanifest',
   './icon-192.png', './icon-512.png',
-  './maskable-512.png', './apple-touch-icon.png', './nurse-full.png', './brain-nurse.svg'
+  './maskable-512.png', './apple-touch-icon.png', './nurse-base.png', './nurse-hand.png', './nurse-sound.png', './brain-nurse.svg'
 ];
 
 self.addEventListener('install', e => {
