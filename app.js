@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION = '1.8.1';
+const APP_VERSION = '1.9.0';
 const KEY = 'pnj_raasu_v1';
 const ICONS = ['🌡️','❄️','🧊','🩸','💉','🛡️','📋','❤️','🛏️','💧','🩺','💊','🩹','🧰','🔬','🧪','🦷','🫁','🧠','🚑','🧼','🧴','🏥','⭐','👑','🏆','📅','📝','📊','🔔'];
 const THEMES = {
@@ -32,18 +32,19 @@ function defaults() {
       { id: 'm3', name: 'บันทึกประจำวัน IC', url: '', icon: '🛡️|🦠', color: '#d99a00' }
     ],
     guides: [
-      { id: 'g1', name: 'ใส่สาย PICC Line', sub: 'สายสวนหลอดเลือดดำส่วนกลาง', url: '', wi: '', eq: [], icon: '💉|🫀', color: '#c2479b' },
-      { id: 'g2', name: 'เจาะน้ำในช่องท้อง', sub: 'Abdominal Paracentesis', url: '', wi: '', eq: [], icon: '🩺|💧', color: '#2f80d6' },
-      { id: 'g3', name: 'เจาะน้ำเยื่อหุ้มปอด', sub: 'Thoracocentesis', url: '', wi: '', eq: [], icon: '🫁|💧', color: '#00a3a3' },
-      { id: 'g4', name: 'เจาะไขกระดูก', sub: 'Bone Marrow Aspiration', url: '', wi: '', eq: [], icon: '🦴|💉', color: '#d99a00' },
-      { id: 'g5', name: 'เจาะน้ำไขสันหลัง', sub: 'Lumbar Puncture', url: '', wi: '', eq: [], icon: '🧠|💧', color: '#7b5cd6' },
-      { id: 'g6', name: 'ใส่สายวัดความดันหลอดเลือดแดง', sub: 'Arterial Line', url: '', wi: '', eq: [], icon: '❤️|📈', color: '#e8553b' },
-      { id: 'g7', name: 'เจาะน้ำในข้อเข่า', sub: 'Arthrocentesis', url: '', wi: '', eq: [], icon: '🦵|💉', color: '#1e9d57' },
-      { id: 'g8', name: 'ใส่สายระบายทรวงอก', sub: 'Intercostal Drainage: ICD', url: '', wi: '', eq: [], icon: '🫁|🚰', color: '#1c3a7a' },
-      { id: 'g9', name: 'เปลี่ยนน้ำยาล้างไตทางช่องท้อง', sub: 'Peritoneal Dialysis', url: '', wi: '', eq: [], icon: '🧴|🔄', color: '#8a5a3c' },
-      { id: 'g10', name: 'สวนล้างกระเพาะปัสสาวะ', sub: 'Bladder Irrigation', url: '', wi: '', eq: [], icon: '🚽|💧', color: '#e8743b' },
-      { id: 'g11', name: 'สวนล้างกระเพาะอาหาร', sub: 'Gastric Lavage', url: '', wi: '', eq: [], icon: '🥤|💧', color: '#5d7a86' }
+      { id: 'g1', name: 'ใส่สาย PICC Line', sub: 'สายสวนหลอดเลือดดำส่วนกลาง', url: '', wi: '', eq: [], cat: 'หลอดเลือดและหัวใจ', icon: '💉|🫀', color: '#c2479b' },
+      { id: 'g2', name: 'เจาะน้ำในช่องท้อง', sub: 'Abdominal Paracentesis', url: '', wi: '', eq: [], cat: 'เจาะ/ดูดสิ่งคัดหลั่ง', icon: '🩺|💧', color: '#2f80d6' },
+      { id: 'g3', name: 'เจาะน้ำเยื่อหุ้มปอด', sub: 'Thoracocentesis', url: '', wi: '', eq: [], cat: 'ทรวงอกและปอด', icon: '🫁|💧', color: '#00a3a3' },
+      { id: 'g4', name: 'เจาะไขกระดูก', sub: 'Bone Marrow Aspiration', url: '', wi: '', eq: [], cat: 'เจาะ/ดูดสิ่งคัดหลั่ง', icon: '🦴|💉', color: '#d99a00' },
+      { id: 'g5', name: 'เจาะน้ำไขสันหลัง', sub: 'Lumbar Puncture', url: '', wi: '', eq: [], cat: 'เจาะ/ดูดสิ่งคัดหลั่ง', icon: '🧠|💧', color: '#7b5cd6' },
+      { id: 'g6', name: 'ใส่สายวัดความดันหลอดเลือดแดง', sub: 'Arterial Line', url: '', wi: '', eq: [], cat: 'หลอดเลือดและหัวใจ', icon: '❤️|📈', color: '#e8553b' },
+      { id: 'g7', name: 'เจาะน้ำในข้อเข่า', sub: 'Arthrocentesis', url: '', wi: '', eq: [], cat: 'เจาะ/ดูดสิ่งคัดหลั่ง', icon: '🦵|💉', color: '#1e9d57' },
+      { id: 'g8', name: 'ใส่สายระบายทรวงอก', sub: 'Intercostal Drainage: ICD', url: '', wi: '', eq: [], cat: 'ทรวงอกและปอด', icon: '🫁|🚰', color: '#1c3a7a' },
+      { id: 'g9', name: 'เปลี่ยนน้ำยาล้างไตทางช่องท้อง', sub: 'Peritoneal Dialysis', url: '', wi: '', eq: [], cat: 'ไตและทางเดินปัสสาวะ', icon: '🧴|🔄', color: '#8a5a3c' },
+      { id: 'g10', name: 'สวนล้างกระเพาะปัสสาวะ', sub: 'Bladder Irrigation', url: '', wi: '', eq: [], cat: 'ไตและทางเดินปัสสาวะ', icon: '🚽|💧', color: '#e8743b' },
+      { id: 'g11', name: 'สวนล้างกระเพาะอาหาร', sub: 'Gastric Lavage', url: '', wi: '', eq: [], cat: 'ทางเดินอาหาร', icon: '🥤|💧', color: '#5d7a86' }
     ],
+    gcats: ['หลอดเลือดและหัวใจ', 'เจาะ/ดูดสิ่งคัดหลั่ง', 'ทรวงอกและปอด', 'ไตและทางเดินปัสสาวะ', 'ทางเดินอาหาร'],
     phones: [],
     depts: ['ห้องฉุกเฉิน', 'พยาบาล/หอผู้ป่วย', 'โภชนาการ', 'เวรเปล', 'รปภ.', 'ช่าง/ซ่อมบำรุง', 'เภสัช', 'ห้องปฏิบัติการ', 'สำนักงาน/IT'],
     favs: [], history: [], notify: false, dismissInstall: 0
@@ -56,6 +57,8 @@ function load() {
     if (r && Array.isArray(r.menus)) {
       const up = { m1: ['🌡️', '🌡️|❄️'], m2: ['🩸', '💉|🩸'], m3: ['🛡️', '🛡️|🦠'] };
       r.menus.forEach(m => { if (up[m.id] && m.icon === up[m.id][0]) m.icon = up[m.id][1]; });
+      const GC = {"g1": "หลอดเลือดและหัวใจ", "g6": "หลอดเลือดและหัวใจ", "g2": "เจาะ/ดูดสิ่งคัดหลั่ง", "g4": "เจาะ/ดูดสิ่งคัดหลั่ง", "g5": "เจาะ/ดูดสิ่งคัดหลั่ง", "g7": "เจาะ/ดูดสิ่งคัดหลั่ง", "g3": "ทรวงอกและปอด", "g8": "ทรวงอกและปอด", "g9": "ไตและทางเดินปัสสาวะ", "g10": "ไตและทางเดินปัสสาวะ", "g11": "ทางเดินอาหาร"};
+      if (Array.isArray(r.guides)) r.guides.forEach(g => { if (g.cat === undefined) g.cat = GC[g.id] || ''; });
       return Object.assign(defaults(), r);
     }
   } catch (e) {}
@@ -102,6 +105,27 @@ function cardHTML(m) {
     <button class="star ${fav ? 'on' : ''}" data-fav="${m.id}" aria-label="รายการโปรด">${fav ? '★' : '☆'}</button>
   </div>`;
 }
+let guideCat = '';
+const gcatCount = c => db.guides.filter(g => (g.cat || '') === c).length;
+function gcatChips() {
+  const c = (v, label, n) => `<button type="button" data-gc="${esc(v)}" class="${guideCat === v ? 'on' : ''}">${esc(label)} <small>${n}</small></button>`;
+  const none = db.guides.filter(g => !(g.cat || '') || !db.gcats.includes(g.cat)).length;
+  return c('', 'ทั้งหมด', db.guides.length) + db.gcats.map(x => c(x, x, gcatCount(x))).join('') + (none && db.gcats.length ? c('__none', 'ไม่ระบุหมวด', none) : '') + `<button type="button" class="mg" data-gcm>⚙ จัดการหมวดหมู่</button>`;
+}
+function guideListHTML() {
+  const d = density(db.guides.length + 1, true);
+  const addCard = `<button class="card add" data-act="add"><span><span class="plus">+</span>เพิ่มหัตถการ</span></button>`;
+  const known = new Set(db.gcats);
+  const inGroup = (g, c) => c === '__none' ? (!(g.cat || '') || !known.has(g.cat)) : (g.cat || '') === c;
+  if (guideCat) {
+    const l = db.guides.filter(g => inGroup(g, guideCat));
+    return `<div class="grid" data-d="${d}">${l.map(cardHTML).join('')}${addCard}</div>`;
+  }
+  const groups = [...db.gcats, '__none'].map(c => ({ c, l: db.guides.filter(g => inGroup(g, c)) })).filter(g => g.l.length);
+  if (!groups.length || (groups.length === 1 && groups[0].c === '__none')) return `<div class="grid" data-d="${d}">${db.guides.map(cardHTML).join('')}${addCard}</div>`;
+  return groups.map(g => `<h4 class="grp">📂 ${g.c === '__none' ? 'ไม่ระบุหมวดหมู่' : esc(g.c)} <small>${g.l.length}</small></h4><div class="grid" data-d="${d}">${g.l.map(cardHTML).join('')}</div>`).join('')
+    + `<div class="grid" data-d="${d}" style="margin-top:14px">${addCard}</div>`;
+}
 function render() {
   const v = $('#view');
   if (tab === 'home') {
@@ -111,8 +135,8 @@ function render() {
   } else if (tab === 'guide') {
     v.innerHTML = `<section class="hello small"><div class="ht"><h2>📖 คู่มือ</h2><p>เตรียมอุปกรณ์ทำหัตถการ</p></div><div class="art"><img src="brain-nurse.svg" alt=""></div></section>
       <h3 class="sec">รายการหัตถการต่างๆ</h3>
-      <div class="grid" data-d="${density(db.guides.length + 1, true)}">${db.guides.map(cardHTML).join('')}
-        <button class="card add" data-act="add"><span><span class="plus">+</span>เพิ่มหัตถการ</span></button></div>`;
+      <div id="gcats" class="cats pd">${gcatChips()}</div>
+      <div id="glist">${guideListHTML()}</div>`;
   } else if (tab === 'phone') {
     v.innerHTML = phoneHTML();
   } else if (tab === 'favs') {
@@ -173,7 +197,7 @@ function manageSheet() {
   const ms = db[col], showList = tab !== 'phone';
   const ov = openSheet(col === 'guides' ? 'จัดการคู่มือ' : 'จัดการเมนู', (showList ? `
     <div class="list">${ms.map((m, i) => `<div class="item"><span class="i">${iconInline(m.icon)}</span>
-      <span class="t"><b>${esc(m.name)}</b><small>${col === 'guides' ? ((m.wi ? 'WI ' + esc(m.wi) + ' · ' : '') + ((m.eq || []).length ? (m.eq.length + ' รายการอุปกรณ์') : 'ยังไม่มีข้อมูล')) : (m.url ? esc(m.url) : 'ยังไม่ตั้งลิงก์')}</small></span>
+      <span class="t"><b>${esc(m.name)}</b><small>${col === 'guides' ? ((m.cat ? esc(m.cat) + ' · ' : '') + (m.wi ? 'WI ' + esc(m.wi) + ' · ' : '') + ((m.eq || []).length ? (m.eq.length + ' รายการอุปกรณ์') : 'ยังไม่มีข้อมูล')) : (m.url ? esc(m.url) : 'ยังไม่ตั้งลิงก์')}</small></span>
       <button class="ib" data-up="${i}" ${i === 0 ? 'disabled' : ''} aria-label="เลื่อนขึ้น">↑</button>
       <button class="ib" data-down="${i}" ${i === ms.length - 1 ? 'disabled' : ''} aria-label="เลื่อนลง">↓</button>
       <button class="ib" data-edit="${m.id}" aria-label="แก้ไข">✎</button>
@@ -228,7 +252,9 @@ function editSheet(id) {
     <div id="pv" class="pvbox"></div>
     <label class="f" for="fName">${isG ? '🩺 ชื่อหัตถการ' : '🔗 ชื่อเมนู'}</label><input type="text" id="fName" maxlength="60" placeholder="เช่น บันทึกอุณหภูมิตู้เย็น" value="${esc(m.name)}">
     <label class="f" for="fSub">📝 คำอธิบายสั้น (ไม่บังคับ)</label><input type="text" id="fSub" maxlength="60" placeholder="เช่น ชื่อภาษาอังกฤษ" value="${esc(m.sub || '')}">
-    ${isG ? `<label class="f" for="fWi">📄 อ้างอิง WI เลขที่</label><input type="text" id="fWi" maxlength="40" placeholder="เช่น WI-NS-001" value="${esc(m.wi || '')}">
+    ${isG ? `<label class="f">📂 หมวดหมู่</label><div id="gCats" class="cats wrapc"></div>
+    <input type="text" id="gNewCat" maxlength="40" placeholder="หรือพิมพ์ชื่อหมวดหมู่ใหม่ (จะเพิ่มในรายการให้)">
+    <label class="f" for="fWi">📄 อ้างอิง WI เลขที่</label><input type="text" id="fWi" maxlength="40" placeholder="เช่น WI-NS-001" value="${esc(m.wi || '')}">
     <label class="f">🧰 อุปกรณ์ที่ต้องเตรียม</label><div id="eqRows"></div>
     <button type="button" class="btn alt" data-eqadd>＋ เพิ่มอุปกรณ์</button>` : `<label class="f" for="fUrl">🌐 ลิงก์ (URL)</label><input type="url" id="fUrl" inputmode="url" autocapitalize="off" autocorrect="off" placeholder="https://..." value="${esc(m.url)}">`}
     <label class="f">เลือกไอคอน</label>
@@ -249,6 +275,13 @@ function editSheet(id) {
     $('#grid', ov).innerHTML = CATS[cat].map(e => `<button type="button" data-e="${e}" class="${e === (slot === 1 ? i1 : i2) ? 'on' : ''}">${e}</button>`).join('');
     $('#sw', ov).innerHTML = PALETTE.map(c => `<button type="button" data-c="${c}" class="${c.toLowerCase() === m.color.toLowerCase() ? 'on' : ''}" style="background:${c}" aria-label="${c}"></button>`).join('');
   };
+  if (isG && !old) m.cat = guideCat && guideCat !== '__none' ? guideCat : '';
+  const paintC = () => {
+    const box = $('#gCats', ov); if (!box) return;
+    const c = (v, label) => `<button type="button" data-gs="${esc(v)}" class="${(m.cat || '') === v ? 'on' : ''}">${esc(label)}</button>`;
+    const extra = m.cat && !db.gcats.includes(m.cat) ? [m.cat] : [];
+    box.innerHTML = c('', 'ไม่ระบุ') + [...db.gcats, ...extra].map(x => c(x, x)).join('');
+  };
   const paintEq = () => {
     const box = $('#eqRows', ov); if (!box) return;
     box.innerHTML = eq.map((r, i) => `<div class="eqrow"><div class="eqtop"><span class="n">${i + 1}</span>
@@ -257,7 +290,8 @@ function editSheet(id) {
       <div class="eqbot"><input type="text" data-eq="q" data-i="${i}" maxlength="20" placeholder="จำนวน" value="${esc(r.q)}">
       <input type="text" data-eq="f" data-i="${i}" maxlength="80" placeholder="สำหรับ (ใช้ทำอะไร)" value="${esc(r.f)}"></div></div>`).join('');
   };
-  paint(); paintEq();
+  paint(); paintEq(); paintC();
+  if ($('#gNewCat', ov)) $('#gNewCat', ov).addEventListener('input', e => { if (e.target.value.trim()) { m.cat = ''; paintC(); } });
   ov.addEventListener('input', e => { const t = e.target; if (t.dataset && t.dataset.eq) eq[+t.dataset.i][t.dataset.eq] = t.value; });
   $('#fName', ov).addEventListener('input', paint);
   $('#fColor', ov).addEventListener('input', e => { m.color = e.target.value; paint(); });
@@ -268,7 +302,8 @@ function editSheet(id) {
   ov.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
     const d = b.dataset;
-    if (d.eqadd !== undefined) { eq.push({ n: '', q: '', f: '' }); paintEq(); const ins = ov.querySelectorAll('[data-eq="n"]'); ins[ins.length - 1]?.focus(); }
+    if (d.gs !== undefined) { m.cat = d.gs; $('#gNewCat', ov).value = ''; paintC(); }
+    else if (d.eqadd !== undefined) { eq.push({ n: '', q: '', f: '' }); paintEq(); const ins = ov.querySelectorAll('[data-eq="n"]'); ins[ins.length - 1]?.focus(); }
     else if (d.eqdel !== undefined) { eq.splice(+d.eqdel, 1); paintEq(); }
     else if (d.slot) { if (d.slot === 'x') { i2 = ''; slot = 1; } else slot = +d.slot; paint(); }
     else if (d.cat) { cat = d.cat; paint(); }
@@ -279,7 +314,7 @@ function editSheet(id) {
       if (!name) { $('#fErr', ov).textContent = 'กรุณาใส่ชื่อเมนู'; return; }
       if (url === null) { $('#fErr', ov).textContent = 'ลิงก์ไม่ถูกต้อง (ต้องเป็น http หรือ https)'; return; }
       Object.assign(m, { name, url, sub: $('#fSub', ov).value.trim(), icon: i2 ? i1 + '|' + i2 : i1 }); delete m.theme;
-      if (isG) { m.wi = $('#fWi', ov).value.trim(); m.eq = eq.map(r => ({ n: r.n.trim(), q: r.q.trim(), f: r.f.trim() })).filter(r => r.n); }
+      if (isG) { const nc = $('#gNewCat', ov).value.trim().slice(0, 40); if (nc) { m.cat = nc; if (!db.gcats.includes(nc)) db.gcats.push(nc); } m.cat = m.cat || ''; m.wi = $('#fWi', ov).value.trim(); m.eq = eq.map(r => ({ n: r.n.trim(), q: r.q.trim(), f: r.f.trim() })).filter(r => r.n); }
       if (old) { delete old.theme; Object.assign(old, m); } else db[col].push({ ...m, id: uid() });
       save(); closeSheet(); render(); toast('บันทึกแล้ว');
     }
@@ -287,7 +322,7 @@ function editSheet(id) {
   if (!old) setTimeout(() => $('#fName', ov).focus(), 50);
 }
 function exportData() {
-  const blob = new Blob([JSON.stringify({ app: 'PNJ RAASU', menus: db.menus, guides: db.guides, phones: db.phones, depts: db.depts, favs: db.favs }, null, 1)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify({ app: 'PNJ RAASU', menus: db.menus, guides: db.guides, gcats: db.gcats, phones: db.phones, depts: db.depts, favs: db.favs }, null, 1)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pnj-raasu-backup.json';
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
@@ -302,12 +337,14 @@ function importData(e) {
         id: String(m.id || uid()), name: String(m.name).slice(0, 60), sub: String(m.sub || '').slice(0, 60),
         icon: typeof m.icon === 'string' && m.icon.length <= 24 ? m.icon : '📋',
         color: /^#[0-9a-f]{6}$/i.test(m.color || '') ? m.color : colorOf(m)[1], url: normUrl(m.url) || '',
-        wi: String(m.wi || '').slice(0, 40),
+        wi: String(m.wi || '').slice(0, 40), cat: String(m.cat || '').slice(0, 40),
         eq: (Array.isArray(m.eq) ? m.eq : []).filter(r => r && r.n).map(r => ({ n: String(r.n).slice(0, 80), q: String(r.q || '').slice(0, 20), f: String(r.f || '').slice(0, 80) }))
       }));
       db.menus = clean(j.menus);
       if (Array.isArray(j.guides)) db.guides = clean(j.guides);
       if (Array.isArray(j.phones)) db.phones = j.phones.filter(p => p && p.name && p.num).map(p => ({ id: String(p.id || uid()), name: String(p.name).slice(0, 60), num: String(p.num).slice(0, 40), note: String(p.note || '').slice(0, 60), icon: String(p.icon || '📞').slice(0, 8), dept: String(p.dept || '').slice(0, 40) }));
+      if (Array.isArray(j.gcats)) db.gcats = [...new Set(j.gcats.map(d => String(d).trim().slice(0, 40)).filter(Boolean))];
+      db.guides.forEach(g => { if (g.cat && !db.gcats.includes(g.cat)) db.gcats.push(g.cat); });
       if (Array.isArray(j.depts)) db.depts = [...new Set(j.depts.map(d => String(d).trim().slice(0, 40)).filter(Boolean))];
       db.phones.forEach(p => { if (p.dept && !db.depts.includes(p.dept)) db.depts.push(p.dept); });
       db.favs = (j.favs || []).filter(x => allMenus().some(m => m.id === x));
@@ -360,41 +397,47 @@ function phoneHTML() {
     <div id="pdepts" class="cats pd">${deptChips()}</div>
     <div id="plist">${phoneItems()}</div>`;
 }
-function deptSheet() {
-  const ov = openSheet('จัดการหน่วยงาน', `
-    <div class="list">${db.depts.map((d, i) => `<div class="item"><span class="t"><b>${esc(d)}</b><small>${deptCount(d)} เบอร์</small></span>
+function listManager(cfg) {
+  const L = () => db[cfg.key], items = () => db[cfg.itemKey];
+  const cnt = n => items().filter(x => (x[cfg.field] || '') === n).length;
+  const ov = openSheet(cfg.title, `
+    <div class="list">${L().map((d, i) => `<div class="item"><span class="t"><b>${esc(d)}</b><small>${cnt(d)} ${cfg.unit}</small></span>
       <button class="ib" data-dup="${i}" ${i === 0 ? 'disabled' : ''} aria-label="เลื่อนขึ้น">↑</button>
-      <button class="ib" data-ddown="${i}" ${i === db.depts.length - 1 ? 'disabled' : ''} aria-label="เลื่อนลง">↓</button>
+      <button class="ib" data-ddown="${i}" ${i === L().length - 1 ? 'disabled' : ''} aria-label="เลื่อนลง">↓</button>
       <button class="ib" data-dren="${i}" aria-label="เปลี่ยนชื่อ">✎</button>
-      <button class="ib del" data-ddel="${i}" aria-label="ลบ">🗑</button></div>`).join('') || '<div class="empty">ยังไม่มีหน่วยงาน</div>'}</div>
-    <label class="f" for="dNew">＋ เพิ่มหน่วยงานใหม่</label>
-    <input type="text" id="dNew" maxlength="40" placeholder="เช่น ห้องผ่าตัด, ไอซียู">
+      <button class="ib del" data-ddel="${i}" aria-label="ลบ">🗑</button></div>`).join('') || '<div class="empty">ยังไม่มีรายการ</div>'}</div>
+    <label class="f" for="dNew">＋ ${cfg.addLabel}</label>
+    <input type="text" id="dNew" maxlength="40" placeholder="${cfg.placeholder}">
     <div class="err" id="dErr"></div>
     <button class="btn" data-dadd>＋ เพิ่ม</button>`);
-  const done = () => { save(); deptSheet(); if (tab === 'phone') render(); };
+  const done = () => { save(); listManager(cfg); cfg.refresh(); };
   ov.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
     if (d.dup !== undefined || d.ddown !== undefined) {
       const i = +(d.dup ?? d.ddown), j = i + (d.dup !== undefined ? -1 : 1);
-      if (j >= 0 && j < db.depts.length) { [db.depts[i], db.depts[j]] = [db.depts[j], db.depts[i]]; done(); }
+      if (j >= 0 && j < L().length) { [L()[i], L()[j]] = [L()[j], L()[i]]; done(); }
     } else if (d.dren !== undefined) {
-      const old = db.depts[+d.dren], n = (prompt('ชื่อหน่วยงานใหม่', old) || '').trim().slice(0, 40);
+      const old = L()[+d.dren], n = (prompt('ชื่อใหม่', old) || '').trim().slice(0, 40);
       if (!n || n === old) return;
-      if (db.depts.includes(n)) { toast('มีหน่วยงานนี้อยู่แล้ว'); return; }
-      db.depts[+d.dren] = n; db.phones.forEach(p => { if (p.dept === old) p.dept = n; }); if (phoneDept === old) phoneDept = n; done();
+      if (L().includes(n)) { toast('มีชื่อนี้อยู่แล้ว'); return; }
+      L()[+d.dren] = n; items().forEach(p => { if (p[cfg.field] === old) p[cfg.field] = n; }); cfg.renamed(old, n); done();
     } else if (d.ddel !== undefined) {
-      const old = db.depts[+d.ddel];
-      if (confirm(`ลบหน่วยงาน "${old}" ?\n(เบอร์ในหน่วยงานนี้จะกลายเป็น "ไม่ระบุหน่วยงาน")`)) {
-        db.depts.splice(+d.ddel, 1); db.phones.forEach(p => { if (p.dept === old) p.dept = ''; }); if (phoneDept === old) phoneDept = ''; done();
+      const old = L()[+d.ddel];
+      if (confirm(`ลบ "${old}" ?\n(${cfg.unit}ในนี้จะกลายเป็น "ไม่ระบุ" ไม่ถูกลบ)`)) {
+        L().splice(+d.ddel, 1); items().forEach(p => { if (p[cfg.field] === old) p[cfg.field] = ''; }); cfg.renamed(old, ''); done();
       }
     } else if (d.dadd !== undefined) {
       const n = $('#dNew', ov).value.trim();
-      if (!n) { $('#dErr', ov).textContent = 'กรุณาใส่ชื่อหน่วยงาน'; return; }
-      if (db.depts.includes(n)) { $('#dErr', ov).textContent = 'มีหน่วยงานนี้อยู่แล้ว'; return; }
-      db.depts.push(n); done(); toast('เพิ่มหน่วยงานแล้ว');
+      if (!n) { $('#dErr', ov).textContent = 'กรุณาใส่ชื่อ'; return; }
+      if (L().includes(n)) { $('#dErr', ov).textContent = 'มีชื่อนี้อยู่แล้ว'; return; }
+      L().push(n); done(); toast('เพิ่มแล้ว');
     }
   });
 }
+const deptSheet = () => listManager({ title: 'จัดการหน่วยงาน', key: 'depts', itemKey: 'phones', field: 'dept', unit: 'เบอร์', addLabel: 'เพิ่มหน่วยงานใหม่', placeholder: 'เช่น ห้องผ่าตัด, ไอซียู',
+  renamed: (o, n) => { if (phoneDept === o) phoneDept = n; }, refresh: () => { if (tab === 'phone') render(); } });
+const gcatSheet = () => listManager({ title: 'จัดการหมวดหมู่คู่มือ', key: 'gcats', itemKey: 'guides', field: 'cat', unit: 'หัตถการ', addLabel: 'เพิ่มหมวดหมู่ใหม่', placeholder: 'เช่น ระบบประสาท, แผลและการพันแผล',
+  renamed: (o, n) => { if (guideCat === o) guideCat = n; }, refresh: () => { if (tab === 'guide') render(); } });
 document.addEventListener('input', e => { if (e.target.id === 'pq') { phoneQ = e.target.value; $('#plist').innerHTML = phoneItems(); } });
 function phoneSheet(id) {
   const old = db.phones.find(p => p.id === id);
@@ -466,6 +509,9 @@ document.addEventListener('click', e => {
     if (i < 0) db.favs.push(id); else db.favs.splice(i, 1);
     save(); render(); toast(i < 0 ? 'เพิ่มในรายการโปรดแล้ว' : 'นำออกจากรายการโปรดแล้ว'); return;
   }
+  const gc = e.target.closest('[data-gc]');
+  if (gc) { guideCat = gc.dataset.gc; $('#gcats').innerHTML = gcatChips(); $('#glist').innerHTML = guideListHTML(); return; }
+  if (e.target.closest('[data-gcm]')) return gcatSheet();
   const pd = e.target.closest('[data-pd]');
   if (pd) { phoneDept = pd.dataset.pd; $('#pdepts').innerHTML = deptChips(); $('#plist').innerHTML = phoneItems(); return; }
   if (e.target.closest('[data-pdm]')) return deptSheet();
