@@ -1,6 +1,7 @@
 /* PNJ RAASU service worker  — เปลี่ยน VERSION ทุกครั้งที่อัพเดท (ใช้ bump_version.py) */
-const VERSION = '2.10.1';
+const VERSION = '2.10.2';
 const CACHE = 'pnj-raasu-' + VERSION;
+const CORE = ['./', './index.html', './style.css', './app.js', './pi.js', './pi-stats.js'];
 const SHELL = [
   './', './index.html', './style.css', './app.js', './pi.js', './pi-stats.js', './ref-pi.jpg', './ref-ph.jpg', './manifest.webmanifest',
   './icon-192.png', './icon-512.png',
@@ -8,7 +9,11 @@ const SHELL = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)));
+  // ดึงไฟล์จากเซิร์ฟเวอร์จริงเสมอ (cache:'reload') กันได้ไฟล์เก่าค้างจากแคชของเบราว์เซอร์/GitHub Pages
+  // ไฟล์หลักต้องโหลดได้ครบ ไม่งั้นการติดตั้งล้มเหลว ส่วนรูป/ไอคอนโหลดไม่ได้ก็ข้ามได้
+  e.waitUntil(caches.open(CACHE).then(c => Promise.all(SHELL.map(u => fetch(new Request(u, { cache: 'reload' }))
+    .then(r => { if (!r.ok) throw new Error(u + ' ' + r.status); return c.put(u, r); })
+    .catch(err => { if (CORE.includes(u)) throw err; })))));
   // ไม่ skipWaiting อัตโนมัติ: รอให้ผู้ใช้กด "อัพเดทตอนนี้"
 });
 

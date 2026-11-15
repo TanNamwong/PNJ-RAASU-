@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION = '2.10.1';
+const APP_VERSION = '2.10.2';
 const KEY = 'pnj_raasu_v1';
 const ICONS = ['🌡️','❄️','🧊','🩸','💉','🛡️','📋','❤️','🛏️','💧','🩺','💊','🩹','🧰','🔬','🧪','🦷','🫁','🧠','🚑','🧼','🧴','🏥','⭐','👑','🏆','📅','📝','📊','🔔'];
 const THEMES = {
@@ -610,8 +610,11 @@ let reloading = false;
 function applyUpdate() {
   toast('กำลังอัพเดท…');
   const reload = () => { if (reloading) return; reloading = true; location.reload(); };
+  const FILES = ['./', 'index.html', 'style.css', 'app.js', 'pi.js', 'pi-stats.js', 'version.json'];
   const hard = () => (window.caches ? caches.keys().then(k => Promise.all(k.map(x => caches.delete(x)))) : Promise.resolve())
-    .then(() => reg ? reg.unregister() : 0).catch(() => {}).then(reload);
+    .then(() => reg ? reg.unregister() : 0).catch(() => {})
+    .then(() => Promise.all(FILES.map(f => fetch(f, { cache: 'reload' }).catch(() => 0)))) // ล้างแคชเบราว์เซอร์ของไฟล์หลักก่อนโหลดใหม่
+    .then(reload);
   if (!reg) return hard();
   const go = w => { navigator.serviceWorker.addEventListener('controllerchange', reload); w.postMessage('SKIP_WAITING'); };
   reg.update().catch(() => {}).then(() => {
@@ -624,7 +627,7 @@ function applyUpdate() {
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   addEventListener('load', async () => {
     try {
-      reg = await navigator.serviceWorker.register('sw.js');
+      reg = await navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' });
       if (reg.waiting && navigator.serviceWorker.controller) showUpdate({});
       reg.addEventListener('updatefound', () => {
         const w = reg.installing;
