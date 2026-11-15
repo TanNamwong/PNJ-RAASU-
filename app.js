@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION = '2.0.0';
+const APP_VERSION = '2.10.0';
 const KEY = 'pnj_raasu_v1';
 const ICONS = ['🌡️','❄️','🧊','🩸','💉','🛡️','📋','❤️','🛏️','💧','🩺','💊','🩹','🧰','🔬','🧪','🦷','🫁','🧠','🚑','🧼','🧴','🏥','⭐','👑','🏆','📅','📝','📊','🔔'];
 const THEMES = {
@@ -92,7 +92,7 @@ const allMenus = () => [...db.menus, ...db.guides];
 let col = 'menus', phoneQ = ''; // ยิ่งมีเมนูมาก การ์ดยิ่งเล็กลงอัตโนมัติ
 const isGuide = m => db.guides.some(x => x.id === m.id);
 function cardHTML(m) {
-  const th = colorOf(m), fav = db.favs.includes(m.id), g = isGuide(m);
+  const th = colorOf(m), g = isGuide(m);
   const ok = g ? !!(m.eq && m.eq.length) : !!m.url;
   const label = ok ? 'พร้อมใช้งาน' : (g ? 'ยังไม่มีข้อมูล' : 'ยังไม่ตั้งลิงก์');
   const a = g ? `<a class="card-link" href="#" data-guide="${m.id}">`
@@ -103,7 +103,6 @@ function cardHTML(m) {
       <span class="name">${esc(m.name)}</span>${m.sub ? `<span class="sub">${esc(m.sub)}</span>` : ''}
       <span class="row"><span class="st ${ok ? 'ok' : 'no'}">${label}</span><span class="go">›</span></span>
     </a>
-    <button class="star ${fav ? 'on' : ''}" data-fav="${m.id}" aria-label="รายการโปรด">${fav ? '★' : '☆'}</button>
   </div>`;
 }
 let guideCat = '';
@@ -136,6 +135,8 @@ function render() {
   const v = $('#view');
   if (tab === 'home') {
     v.innerHTML = PI.homeHTML(); PI.after();
+  } else if (tab === 'links') {
+    v.innerHTML = linksHTML();
   } else if (tab === 'guide') {
     v.innerHTML = `<section class="hello small"><div class="ht"><h2>📖 คู่มือ</h2><p>เตรียมอุปกรณ์ทำหัตถการ</p></div><div class="art"><img src="brain-nurse.svg" alt=""></div></section>
       <h3 class="sec">รายการหัตถการต่างๆ</h3>
@@ -143,19 +144,16 @@ function render() {
       <div id="glist">${guideListHTML()}</div>`;
   } else if (tab === 'phone') {
     v.innerHTML = phoneHTML();
-  } else if (tab === 'favs') {
-    const l = allMenus().filter(m => db.favs.includes(m.id));
-    v.innerHTML = l.length ? `<h3 class="sec">⭐ รายการโปรด</h3><div class="grid" data-d="${density(l.length)}">${l.map(cardHTML).join('')}</div>`
-      : `<div class="empty"><b>⭐</b>ยังไม่มีรายการโปรด<br>กดดาวที่มุมการ์ดในหน้าหลักเพื่อเพิ่ม</div>`;
-  } else if (tab === 'history') {
-    v.innerHTML = db.history.length ? `<h3 class="sec">🕘 ประวัติการเปิด</h3><div class="list">${db.history.map((h, i) =>
-      `<a class="item" href="${esc(h.url)}" target="_blank" rel="noopener noreferrer" data-hist="${i}"><span class="i">${iconInline(h.icon)}</span>
-       <span class="t"><b>${esc(h.name)}</b><small>${fmt(h.t)}</small></span><span>›</span></a>`).join('')}</div>
-       <button class="btn warn" style="margin-top:14px" data-act="clearhist">ล้างประวัติ</button>`
-      : `<div class="empty"><b>🕘</b>ยังไม่มีประวัติการเปิดลิงก์</div>`;
   } else {
     v.innerHTML = aboutHTML();
   }
+}
+function historyHTML() {
+  return db.history.length ? `<h3 class="sec" style="margin-top:18px">🕘 ประวัติการเปิดลิงก์</h3><div class="list">${db.history.map((h, i) =>
+      `<a class="item" href="${esc(h.url)}" target="_blank" rel="noopener noreferrer" data-hist="${i}"><span class="i">${iconInline(h.icon)}</span>
+       <span class="t"><b>${esc(h.name)}</b><small>${fmt(h.t)}</small></span><span>›</span></a>`).join('')}</div>
+       <button class="btn warn" style="margin-top:14px" data-act="clearhist">ล้างประวัติ</button>`
+    : `<h3 class="sec" style="margin-top:18px">🕘 ประวัติการเปิดลิงก์</h3><div class="empty" style="padding:18px 0">ยังไม่มีประวัติการเปิดลิงก์</div>`;
 }
 function aboutHTML() {
   const inst = isStandalone()
@@ -170,6 +168,7 @@ function aboutHTML() {
       <div class="ver"><span>สถานะ</span><b id="verState">${lastState}</b></div></div></div>
     <div style="margin-top:12px">${inst}
       <button class="btn alt" data-act="checkupdate">🔄 ตรวจสอบอัพเดท</button></div>
+    ${historyHTML()}
     <p class="hint" style="margin-top:14px">ข้อมูลเมนูและประวัติเก็บในเครื่องนี้เท่านั้น สำรอง/ย้ายเครื่องได้ที่ ⚙️ จัดการเมนู</p>`;
 }
 
@@ -325,12 +324,20 @@ function editSheet(id) {
   });
   if (!old) setTimeout(() => $('#fName', ov).focus(), 50);
 }
-async function exportData() {
+async function exportData(auto) {
   let pi = null; try { pi = await PI.exportObj(); } catch (e) {}
-  const blob = new Blob([JSON.stringify({ app: 'PNJ RAASU', menus: db.menus, guides: db.guides, gcats: db.gcats, phones: db.phones, depts: db.depts, favs: db.favs, pi }, null, 1)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pnj-raasu-backup.json';
-  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  const text = JSON.stringify({ app: 'PNJ RAASU', menus: db.menus, guides: db.guides, gcats: db.gcats, phones: db.phones, depts: db.depts, favs: db.favs, pi }, null, 1);
+  const dn = new Date(), pz = n => String(n).padStart(2, '0');
+  const name = `pnj-raasu-backup-${dn.getFullYear()}-${pz(dn.getMonth() + 1)}-${pz(dn.getDate())}.json`;
+  let how = '';
+  try { if (await PI.writeBackup(name, text)) how = 'folder'; } catch (e) {}   // เขียนลงโฟลเดอร์ที่เลือกไว้ (ถ้ามี)
+  if (!how) {                                                                  // ไม่มีโฟลเดอร์ → ดาวน์โหลดไปที่ Downloads
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' })); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    how = 'download';
+  }
   db.lastBackup = Date.now(); save();
+  return how;
 }
 function importData(e) {
   const f = e.target.files[0]; if (!f) return;
@@ -632,4 +639,4 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
 
 /* ---------- start ---------- */
 const q = new URLSearchParams(location.search).get('tab');
-setTab(['home', 'guide', 'phone', 'favs', 'history', 'about'].includes(q) ? q : 'home');
+setTab(['home', 'links', 'guide', 'phone', 'about'].includes(q) ? q : (q === 'history' ? 'about' : 'home'));
