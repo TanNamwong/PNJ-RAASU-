@@ -279,3 +279,47 @@ h4.grp small{background:#e6f3ee;color:#1e8f4e;border-radius:999px;padding:1px 8p
 
 .cats.pd+#glist .grp,#glist .grp:first-child{margin-top:14px}
 #glist .grid{margin-bottom:4px}
+
+/* ===== โมดูล PI / Phlebitis (หน้าแรก) ===== */
+:root{--pi:#d9621c;--pit:#fff1e6;--ph:#2468c4;--pht:#e8f1fd}
+.pi-subs{margin:2px 0 10px}
+.pi-card{background:#fff;border-radius:20px;box-shadow:0 0 0 1px var(--line),0 6px 18px #0b6b3a14;padding:14px;margin-bottom:12px}
+.pi-lb{font-size:13px;font-weight:700;color:var(--mut);margin:0 0 6px}
+.pi-in{width:100%;padding:11px 12px;border:1.5px solid #cfdcd4;border-radius:14px;font:inherit;font-size:16px;background:#f8fbf9;color:var(--tx)}
+select.pi-in{appearance:auto;padding:10px 8px;font-size:15px}
+.pi-in:focus{outline:2px solid var(--g1);border-color:transparent}
+.pi-chips{display:flex;flex-wrap:wrap;gap:8px}
+.pi-chip{padding:9px 15px;border-radius:999px;background:#eef2f1;font-size:14px;font-weight:700}
+.pi-chip.on{background:var(--g1);color:#fff}
+.pi-pth{display:flex;align-items:center;gap:10px}
+.pi-n{flex:none;width:32px;height:32px;border-radius:50%;background:#dff3e8;color:var(--g1);font-weight:800;display:grid;place-items:center}
+.pi-g{border-radius:16px;padding:10px 12px 12px;margin-top:10px;border-left:6px solid}
+.pi-gp{background:var(--pit);border-color:var(--pi)}.pi-gh{background:var(--pht);border-color:var(--ph)}
+.pi-gt{font-weight:800;font-size:15px}.pi-gp .pi-gt{color:var(--pi)}.pi-gh .pi-gt{color:var(--ph)}
+.pi-yn{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.pi-yl{font-size:14px;font-weight:600}
+.pi-seg{display:inline-flex;background:#fff;border-radius:999px;padding:3px;gap:3px;box-shadow:inset 0 0 0 1px #0001}
+.pi-seg button{padding:8px 14px;border-radius:999px;font-size:14px;font-weight:700;color:#5d6f76;min-width:64px}
+.pi-seg .no.on{background:#7b8b92;color:#fff}
+.pi-gp .pi-seg .yes.on{background:var(--pi);color:#fff}.pi-gh .pi-seg .yes.on{background:var(--ph);color:#fff}
+.pi-det{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.pi-det input{grid-column:1/-1;font-size:15px;padding:10px 12px}
+.pi-gp .pi-in{border-color:#f0c4a3}.pi-gh .pi-in{border-color:#b9d2f3}
+.pi-warn{background:#fff3cd;color:#7a5a00;border-radius:14px;padding:10px 12px;margin-bottom:12px;font-size:14px;font-weight:600}
+.pi-ref{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px}
+.pi-ref>div{border:1px solid var(--line);border-radius:12px;padding:8px;font-size:12.5px;line-height:1.4}
+.pi-ref svg{width:100%;height:52px;display:block;margin-bottom:4px}.pi-ref b{display:block}
+.pi-up{max-width:100%;border-radius:12px;margin-top:8px}
+.pi-tw{overflow-x:auto;margin:0 -4px}
+.pi-t{border-collapse:collapse;width:100%;font-size:13px}.pi-t th,.pi-t td{border:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}.pi-t th{background:#eef5f0}
+.pi-t th.tp{background:var(--pit);color:var(--pi)}.pi-t th.tq{background:var(--pht);color:var(--ph)}.pi-t td.cp{background:var(--pit)}.pi-t td.cq{background:var(--pht)}
+.pi-stat{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.pi-stat span{background:#eef5f0;color:var(--g2);border-radius:10px;padding:6px 10px;font-size:13px;font-weight:700}
+.pi-stat .sp{background:var(--pit);color:var(--pi)}.pi-stat .sh{background:var(--pht);color:var(--ph)}
+.pi-x{color:var(--danger);font-size:13px;font-weight:700}
+.pi-ptitle{display:none;font-size:16px;margin:0 0 8px}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .top,.tabs,#banners,#toast,.pi-noprint,.hello,.cats{display:none!important}
+  body{background:#fff;padding:0;max-width:none}
+  .pi-card{box-shadow:none;padding:0}.pi-ptitle{display:block}.pi-t{font-size:11px}
+}

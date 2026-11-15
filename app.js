@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION = '1.9.0';
+const APP_VERSION = '2.0.0';
 const KEY = 'pnj_raasu_v1';
 const ICONS = ['🌡️','❄️','🧊','🩸','💉','🛡️','📋','❤️','🛏️','💧','🩺','💊','🩹','🧰','🔬','🧪','🦷','🫁','🧠','🚑','🧼','🧴','🏥','⭐','👑','🏆','📅','📝','📊','🔔'];
 const THEMES = {
@@ -82,6 +82,7 @@ const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.
 const nurseHTML = alt => `<span class="nurse"><img class="base" src="nurse-base.png" alt="${esc(alt || '')}"><img class="hand" src="nurse-hand.png" alt=""><img class="snd" src="nurse-sound.png" alt=""></span>`;
 let tab = 'home';
 function setTab(t) {
+  if (t === 'home' && tab !== 'home') PI.home(); // กลับหน้าแรกเสมอเริ่มที่แบบประเมิน PI/Phlebitis
   tab = t; col = t === 'guide' ? 'guides' : 'menus';
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
   render(); scrollTo(0, 0);
@@ -126,12 +127,15 @@ function guideListHTML() {
   return groups.map(g => `<h4 class="grp">📂 ${g.c === '__none' ? 'ไม่ระบุหมวดหมู่' : esc(g.c)} <small>${g.l.length}</small></h4><div class="grid" data-d="${d}">${g.l.map(cardHTML).join('')}</div>`).join('')
     + `<div class="grid" data-d="${d}" style="margin-top:14px">${addCard}</div>`;
 }
+function linksHTML() {
+  return `<section class="hello"><div class="ht"><h2><span class="gt">สวัสดี</span> <span class="wave">👋</span></h2><p class="chip">✨ เลือกเมนูเอกสาร<br>ที่ต้องการได้เลย</p></div><div class="art"><img src="brain-nurse.svg" alt="">${nurseHTML()}</div></section>
+      <div class="grid" data-d="${density(db.menus.length + 1, false)}">${db.menus.map(cardHTML).join('')}
+        <button class="card add" data-act="add"><span><span class="plus">+</span>เพิ่มลิงก์ใหม่</span></button></div>`;
+}
 function render() {
   const v = $('#view');
   if (tab === 'home') {
-    v.innerHTML = `<section class="hello"><div class="ht"><h2><span class="gt">สวัสดี</span> <span class="wave">👋</span></h2><p class="chip">✨ เลือกเมนูเอกสาร<br>ที่ต้องการได้เลย</p></div><div class="art"><img src="brain-nurse.svg" alt="">${nurseHTML()}</div></section>
-      <div class="grid" data-d="${density(db.menus.length + 1, false)}">${db.menus.map(cardHTML).join('')}
-        <button class="card add" data-act="add"><span><span class="plus">+</span>เพิ่มลิงก์ใหม่</span></button></div>`;
+    v.innerHTML = PI.homeHTML(); PI.after();
   } else if (tab === 'guide') {
     v.innerHTML = `<section class="hello small"><div class="ht"><h2>📖 คู่มือ</h2><p>เตรียมอุปกรณ์ทำหัตถการ</p></div><div class="art"><img src="brain-nurse.svg" alt=""></div></section>
       <h3 class="sec">รายการหัตถการต่างๆ</h3>
@@ -321,15 +325,17 @@ function editSheet(id) {
   });
   if (!old) setTimeout(() => $('#fName', ov).focus(), 50);
 }
-function exportData() {
-  const blob = new Blob([JSON.stringify({ app: 'PNJ RAASU', menus: db.menus, guides: db.guides, gcats: db.gcats, phones: db.phones, depts: db.depts, favs: db.favs }, null, 1)], { type: 'application/json' });
+async function exportData() {
+  let pi = null; try { pi = await PI.exportObj(); } catch (e) {}
+  const blob = new Blob([JSON.stringify({ app: 'PNJ RAASU', menus: db.menus, guides: db.guides, gcats: db.gcats, phones: db.phones, depts: db.depts, favs: db.favs, pi }, null, 1)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'pnj-raasu-backup.json';
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  db.lastBackup = Date.now(); save();
 }
 function importData(e) {
   const f = e.target.files[0]; if (!f) return;
   const r = new FileReader();
-  r.onload = () => {
+  r.onload = async () => {
     try {
       const j = JSON.parse(r.result);
       if (!Array.isArray(j.menus)) throw 0;
@@ -348,7 +354,8 @@ function importData(e) {
       if (Array.isArray(j.depts)) db.depts = [...new Set(j.depts.map(d => String(d).trim().slice(0, 40)).filter(Boolean))];
       db.phones.forEach(p => { if (p.dept && !db.depts.includes(p.dept)) db.depts.push(p.dept); });
       db.favs = (j.favs || []).filter(x => allMenus().some(m => m.id === x));
-      save(); closeSheet(); render(); toast('นำเข้าข้อมูลแล้ว');
+      let n = 0; if (j.pi) n = await PI.importObj(j.pi);
+      save(); closeSheet(); render(); toast('นำเข้าข้อมูลแล้ว' + (n ? ' (PI/Phlebitis ' + n + ' รายการ)' : ''));
     } catch (x) { toast('ไฟล์สำรองไม่ถูกต้อง'); }
   };
   r.readAsText(f);
