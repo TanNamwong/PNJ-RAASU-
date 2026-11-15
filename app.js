@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION = '2.10.0';
+const APP_VERSION = '2.10.1';
 const KEY = 'pnj_raasu_v1';
 const ICONS = ['🌡️','❄️','🧊','🩸','💉','🛡️','📋','❤️','🛏️','💧','🩺','💊','🩹','🧰','🔬','🧪','🦷','🫁','🧠','🚑','🧼','🧴','🏥','⭐','👑','🏆','📅','📝','📊','🔔'];
 const THEMES = {

@@ -1,5 +1,5 @@
 /* PNJ RAASU service worker  — เปลี่ยน VERSION ทุกครั้งที่อัพเดท (ใช้ bump_version.py) */
-const VERSION = '2.10.0';
+const VERSION = '2.10.1';
 const CACHE = 'pnj-raasu-' + VERSION;
 const SHELL = [
   './', './index.html', './style.css', './app.js', './pi.js', './pi-stats.js', './ref-pi.jpg', './ref-ph.jpg', './manifest.webmanifest',

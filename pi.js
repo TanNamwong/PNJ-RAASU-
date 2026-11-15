@@ -341,7 +341,7 @@ const PI = (() => {
 
   function homeHTML() {
     const chip = (s, l) => `<button type="button" class="${sub === s ? 'on' : ''}" data-pi="sub" data-s="${s}">${l}</button>`;
-    const chips = `<div class="cats pi-subs pi-noprint">${chip('form', '📝 บันทึก')}${chip('rep', '📊 รายงาน')}${chip('ana', '📈 วิเคราะห์')}${chip('ref', '🖼️ รูปอ้างอิง')}</div>`;
+    const chips = `<div class="cats pi-subs pi-noprint">${chip('form', '📝 บันทึก')}${chip('rep', '📊 รายงาน')}${chip('ana', '📈 วิเคราะห์')}</div>`;
     return `<section class="hello small pi-noprint"><div class="ht"><h2 class="pi-h2"><span class="gt">ประเมิน PI / Phlebitis</span></h2><p class="pi-sub"><b style="color:var(--pi)">แผลกดทับ</b> • <b style="color:var(--ph)">หลอดเลือดดำอักเสบ</b></p></div><div class="art"><img src="brain-nurse.svg" alt=""></div></section>${chips}<div id="piBody">${body()}</div>`;
   }
   function after() { if (sub === 'rep') fillReport(); else if (sub === 'ana') fillAna(); }
